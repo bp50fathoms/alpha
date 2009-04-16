@@ -3,8 +3,6 @@ require 'property_helpers'
 
 module PropertyClassSpec
   describe Property do
-    include PropertyHelpers
-
     it_should_behave_like 'Property'
 
     def declare_property_p

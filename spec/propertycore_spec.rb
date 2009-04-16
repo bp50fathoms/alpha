@@ -3,8 +3,6 @@ require 'property_helpers'
 
 module PropertyCoreSpec
   describe Property do
-    include PropertyHelpers
-
     it_should_behave_like 'Property'
 
     it 'should build a property' do

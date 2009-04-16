@@ -32,7 +32,7 @@ module PropertyLanguageSpec
       p.call('').should be_true
     end
 
-    it '' do
+    it 'should offer a top level method for providing documentation' do
       doc = 'Example doc'
       desc doc
       p = property :p => [String, String] do |a,b|

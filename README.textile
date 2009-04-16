@@ -2,9 +2,11 @@ h2. Requirements
 
 * "Ruby 1.8":http://www.ruby-lang.org/
 * "Ruby Gems":http://www.rubygems.org/
+** "ParseTree":http://github.com/seattlerb/parsetree/
 ** "rake":http://rake.rubyforge.org/ <sup><a href="#fn1">1</a></sup>
 ** "rcov":http://eigenclass.org/hiki/rcov/ <sup><a href="#fn1">1</a></sup>
 ** "rspec":http://www.rspec.info/ <sup><a href="#fn1">1</a></sup>
+** "ruby2ruby":http://github.com/seattlerb/ruby2ruby/
 
 fn1. are only necessary for executing the @rakefile@ which runs the
 unit tests and generates test and code coverage reports. Otherwise,

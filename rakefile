@@ -1,0 +1,63 @@
+require 'rubygems'
+require 'spec/rake/spectask'
+
+
+RAKE = Spec::Rake
+
+GEM_DIR = '/opt/local/lib/ruby'
+DOC_DIR = 'doc'
+RCOV_DIR = 'rcov'
+SPEC_DIR = 'spec'
+SRC_DIR = 'src'
+EXCLUDES = ['textui', 'ui', 'scrollpane']
+
+SPEC = FileList["#{SPEC_DIR}/*.rb"]
+SPEC_DOC = "#{DOC_DIR}/#{SPEC_DIR}/spec.html"
+RCOV_DOC = "#{DOC_DIR}/#{RCOV_DIR}"
+EXCLUDE_SRC = EXCLUDES.map { |f| "#{SRC_DIR}/#{f}.rb," }.inject(&:+)[0..-2]
+EXCLUDE_RCOV = "#{SPEC_DIR},#{GEM_DIR},#{EXCLUDE_SRC}"
+
+
+desc 'Default build'
+task :default => :spec
+
+desc 'Nightly build'
+task :nightly => [:doc_spec, :rcov_spec]
+
+task :doc_spec => :dirs
+task :rcov_spec => :dirs
+
+
+def common_opts(t)
+  t.spec_files = SPEC
+  t.libs = [SPEC_DIR, SRC_DIR]
+end
+
+desc 'Run all RSpec'
+RAKE::SpecTask.new do |t|
+  common_opts(t)
+end
+
+desc 'Run all RSpec and generate report'
+RAKE::SpecTask.new do |t|
+  t.name = :doc_spec
+  t.spec_opts = ['--format', "html", "> #{SPEC_DOC}"]
+  common_opts(t)
+end
+
+desc 'Run all RSpec with RCov and generate report'
+RAKE::SpecTask.new do |t|
+  t.name = :rcov_spec
+  t.rcov = true
+  t.rcov_dir = RCOV_DOC
+  t.rcov_opts = ['--exclude', EXCLUDE_RCOV]
+  common_opts(t)
+end
+
+desc "Create all doc dirs if they don't exist already"
+task :dirs do
+  [[DOC_DIR, '.'], [SPEC_DIR, DOC_DIR], [RCOV_DIR, DOC_DIR]].each do |e|
+    Dir.mkdir(e.last + '/' + e.first) unless
+      Dir.entries(e.last).include?(e.first)
+  end
+end

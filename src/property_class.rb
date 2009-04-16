@@ -7,7 +7,7 @@ class Property
 
   def self.properties; @@properties ||= {} end
 
-  def_delegators :properties, :[], :has_key?, :clear
+  def_delegators :properties, :[], :clear, :has_key?, :keys, :values
 
   def self.method_missing(name, *args)
     if properties.has_key?(name)

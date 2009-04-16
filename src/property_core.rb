@@ -17,12 +17,11 @@ class Property
     raise ArgumentError, 'a block must be provided' if block.nil?
     @key = key
     @types = types
-    if block.arity > 0 or types.size == 0
+    if block.arity < -1 or block.arity > 0 or types.size == 0
       predicate(&block)
     else
       instance_eval(&block)
-      raise ArgumentError, 'property predicate should be defined' if
-        predicate.nil?
+      raise ArgumentError, 'predicate should be defined' if predicate.nil?
     end
     self.class[key] = self
   end
@@ -39,6 +38,7 @@ class Property
 
   def predicate=(expr)
     ts = types.size
+    raise ArgumentError, 'varargs are unsupported' if expr.arity < -1
     arity = expr.arity != -1 ? expr.arity : 0
     if ts != arity
       raise ArgumentError, "wrong number of types (#{ts} for #{arity})"

@@ -27,13 +27,13 @@ module PropertyClassSpec
       Property[:p].should be_nil
     end
 
-    it 'should reject wrong argument number calls of properties' do
+    it 'should reject wrong argument number calls on properties' do
       p = declare_property_p
       lambda { Property.p(true) }.should raise_error(ArgumentError)
       Property[:p].should == p
     end
 
-    it 'should assign correctly the documenting description' do
+    it 'should assign correctly the documenting description through the writer' do
       Property.new(:p, [String]) do |a|
         a.length > 0
       end
@@ -49,10 +49,27 @@ module PropertyClassSpec
       Property[:r].desc.should be_nil
     end
 
+    it 'should assign correctly the documenting description through the global' do
+      Property.new(:p, [String]) do |a|
+        a.length > 0
+      end
+      doc = 'Property for testing purposes'
+      Property.next_desc = doc
+      Property.new(:q, [Object, Object]) do |a, b|
+        a & b
+      end
+      Property.new(:r, [Hash]) do |a|
+        !a.nil?
+      end
+      Property[:p].desc.should be_nil
+      Property[:q].desc.should == doc
+      Property[:r].desc.should be_nil
+    end
+
     it 'should reject descriptions different than Strings' do
       lambda do
-        (Property.new(:p) {}).desc = 1
-      end.should raise_error(ArgumentError)
+        declare_property_p.desc = 1
+      end.should raise_error(ArgumentError, 'the description must be a String')
     end
   end
 end

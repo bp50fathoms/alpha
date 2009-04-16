@@ -4,18 +4,17 @@ require 'spec/rake/spectask'
 
 RAKE = Spec::Rake
 
-GEM_DIR = '/opt/local/lib/ruby'
 DOC_DIR = 'doc'
 RCOV_DIR = 'rcov'
 SPEC_DIR = 'spec'
 SRC_DIR = 'src'
-EXCLUDES = ['textui', 'ui', 'scrollpane']
 
-SPEC = FileList["#{SPEC_DIR}/*.rb"]
 SPEC_DOC = "#{DOC_DIR}/#{SPEC_DIR}/spec.html"
 RCOV_DOC = "#{DOC_DIR}/#{RCOV_DIR}"
-EXCLUDE_SRC = EXCLUDES.map { |f| "#{SRC_DIR}/#{f}.rb," }.inject(&:+)[0..-2]
-EXCLUDE_RCOV = "#{SPEC_DIR},#{GEM_DIR},#{EXCLUDE_SRC}"
+
+EXCLUDES = ['textui', 'ui', 'scrollpane']
+EXCLUDES_SRC = EXCLUDES.map { |f| "#{SRC_DIR}/#{f}.rb," }.inject(&:+)[0..-2]
+EXCLUDE_RCOV = "#{SPEC_DIR},#{Gem.dir},#{EXCLUDES_SRC}"
 
 
 desc 'Default build'
@@ -29,7 +28,7 @@ task :rcov_spec => :dirs
 
 
 def common_opts(t)
-  t.spec_files = SPEC
+  t.spec_files = FileList["#{SPEC_DIR}/*.rb"]
   t.libs = [SPEC_DIR, SRC_DIR]
 end
 

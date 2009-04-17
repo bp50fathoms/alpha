@@ -3,7 +3,7 @@ require 'resultcollector'
 
 module ResultCollectorSpec
   describe ResultCollector do
-    it 'should collect ' do
+    it 'should collect adequately all values' do
       # (a | (b | (c >= d)))
       # (| a (| b (>= c d)))
       l = lambda do |a,b,c,d,r|

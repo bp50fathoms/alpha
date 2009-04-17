@@ -9,8 +9,6 @@ class Property
 
   def_delegator :types, :size, :arity
 
-  # def_delegator :predicate, :call
-
   def initialize(key, types, &block)
     raise ArgumentError, 'wrong key' unless key.is_a?(Symbol)
     raise ArgumentError, 'wrong type list' unless types.is_a?(Array)
@@ -37,6 +35,7 @@ class Property
   def call(*args)
     if arity > 0 and args.length < predicate.arity
       args << ResultCollector.new
+      # de la que retorna meterle el resultcollector
     end
     predicate.call(*args)
   end

@@ -9,7 +9,7 @@ class Property
 
   def_delegator :types, :size, :arity
 
-  def_delegator :predicate, :call
+  # def_delegator :predicate, :call
 
   def initialize(key, types, &block)
     raise ArgumentError, 'wrong key' unless key.is_a?(Symbol)
@@ -34,6 +34,13 @@ class Property
     end
   end
 
+  def call(*args)
+    if arity > 0 and args.length < predicate.arity
+      args << ResultCollector.new
+    end
+    predicate.call(*args)
+  end
+
   private
 
   def predicate=(expr)
@@ -43,6 +50,10 @@ class Property
     if ts != arity
       raise ArgumentError, "wrong number of types (#{ts} for #{arity})"
     end
-    @predicate = expr
+    if arity == 0
+      @predicate = expr
+    else
+      @predicate = PropertyVisitor.proc(expr)
+    end
   end
 end

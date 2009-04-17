@@ -32,6 +32,14 @@ module PropertyCoreSpec
       p.call.should be_true
     end
 
+    it 'should accept a ResultCollector explicitly as parameter' do
+      p = Property.new(:p, [String, String]) do |a,b|
+        a + b == b + a
+      end
+      p.call('ab', 'ab', ResultCollector.new).should be_true
+      p.call('a', 'b', ResultCollector.new).should be_false
+    end
+
     it 'should reject a property with non-Symbol values as keys' do
       lambda { Property.new(1, []) { } }.should raise_error(ArgumentError)
       lambda do

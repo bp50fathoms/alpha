@@ -21,5 +21,14 @@ module ResultCollectorSpec
       r.result[6].should == [4.0]
       r.result[7].should == [5.0]
     end
+
+    it 'should collect more than one value for the same expression correctly' do
+      l = lambda do |a,r|
+        r.store(1, a.all?{ |e| r.store(2, e > 0) })
+      end
+      l.call([1, 0], r = ResultCollector.new)
+      r.result[1].should == [false]
+      r.result[2].should == [true, false]
+    end
   end
 end

@@ -1,6 +1,3 @@
-require 'decorator'
-
-
 class ResultCollector
   attr_reader :result
 
@@ -8,15 +5,13 @@ class ResultCollector
     @result = {}
   end
 
-  def store_obj(expr, obj)
-    store(expr, nil, obj)
-  end
-
-  def store(expr, method, obj, *args)
-    if method
-      result[expr] = obj.send(method, *args)
+  def store(expr, obj)
+    r = @result[expr]
+    if r
+      @result[expr] = r + [obj]
     else
-      result[expr] = obj
+      @result[expr] = [obj]
     end
+    obj
   end
 end

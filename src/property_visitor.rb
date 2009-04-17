@@ -12,14 +12,10 @@ class PropertyVisitor < SexpProcessor
   end
 
   def proc_body(exp)
-    p exp
-    exp.shift
-    exp.shift
-    #3.times { exp.shift }
-    p exp.shift
+    3.times { exp.shift }
     raise 'Empty property body' if exp.empty?
     exp.shift
-    #process(exp.shift)
+    process(exp.shift)
   end
 
   def process_lvar(exp)

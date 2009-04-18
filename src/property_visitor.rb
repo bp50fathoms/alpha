@@ -31,7 +31,27 @@ class PropertyVisitor
   end
 
   def visit_call(exp)
-    instrument(s(:call, visit(exp[1]), exp[2], s(:arglist, visit(exp[3][1]))))
+    if [:&, :|].include?(exp[2])
+      instrument(s(:call, visit(exp[1]), exp[2], s(:arglist, visit(exp[3][1]))))
+    else
+      exp
+    end
+  end
+
+  def visit_not(exp)
+    instrument(s(:not, visit(exp[1])))
+  end
+
+  def visit_and(exp)
+    instrument(s(:and, visit(exp[1]), visit(exp[2])))
+  end
+
+  def visit_or(exp)
+    instrument(s(:or, visit(exp[1]), visit(exp[2])))
+  end
+
+  def visit_if(exp)
+    s(:if, instrument(exp[1]), visit(exp[2]), visit(exp[3]))
   end
 
   private

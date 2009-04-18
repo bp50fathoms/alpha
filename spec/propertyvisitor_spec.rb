@@ -74,16 +74,24 @@ module PropertyVisitorSpec
     it 'should process correctly existential quantification' do
       source(lambda { |a| a.any? { |e| e.a or e.b } }).should ==
         "proc do |a, _r|\n" +
-        "  _r.store(3, a.any? { |e| " +
+        '  _r.store(3, a.any? { |e| ' +
         "_r.store(2, (_r.store(0, e.a) or _r.store(1, e.b))) })\n" +
         "end"
     end
 
+    it 'should process correctly conditional expressions' do
+      source(lambda { |a| a.b ? a.c : a.d }).should ==
+        "proc do |a, _r|\n" +
+        "  _r.store(3, _r.store(0, a.b) ? (_r.store(1, a.c)) " +
+        ": (_r.store(2, a.d)))\n" +
+        'end'
+    end
+
+    # implication and lazy implication
+
     # aritmetic comparisons
 
-    it 'should process correctly property composition'
-
-    # conditionals
+    # property composition
 
     # instance exec
 

@@ -1,5 +1,6 @@
 require 'property_class'
 require 'property_core'
 require 'property_visitor'
+require 'property_ast'
 require 'property_language'
 require 'resultcollector'

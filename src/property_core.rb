@@ -35,7 +35,6 @@ class Property
   def call(*args)
     if arity > 0 and args.length < predicate.arity
       args << ResultCollector.new
-      # de la que retorna meterle el resultcollector
     end
     predicate.call(*args)
   end
@@ -52,7 +51,8 @@ class Property
     if arity == 0
       @predicate = expr
     else
-      @predicate = PropertyVisitor.proc(expr)
+      @predicate = expr
+      # @predicate = PropertyVisitor.proc(expr)
     end
   end
 end

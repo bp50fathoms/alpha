@@ -5,38 +5,33 @@ require 'parse_tree'
 require 'parse_tree_extensions'
 
 
-class PropertyVisitor < SexpProcessor
+class PropertyVisitor
   @@count = 0
 
   def self.reset
     @@count = 0
   end
 
-  def self.proc(block)
-    ncode = Ruby2Ruby.new.process(self.new.proc_body(block.to_sexp))
+  def self.accept(block)
+    ncode = Ruby2Ruby.new.process(self.new.visit_body(block.to_sexp))
     block.binding.eval(ncode)
   end
 
-  def proc_body(exp)
-    exp.shift
-    call = exp.shift
-    asgn = exp.shift
-    raise ArgumentError, 'empty block body' if exp.empty?
-    s(:iter, call, add_arg(asgn), process(exp.shift))
+  def visit(exp)
+    send("visit_#{exp.first}", exp)
   end
 
-  def process_lvar(exp)
-    exp.shift
-    var = exp.shift
-    instrument(s(:lvar, var))
+  def visit_body(exp)
+    raise ArgumentError, 'empty block body' unless exp[3]
+    s(:iter, exp[1], add_arg(exp[2]), visit(exp[3]))
   end
 
-  def process_call(exp)
-    exp.shift
-    lvalue = process(exp.shift)
-    method = exp.shift
-    arglist = exp.shift
-    instrument(s(:call, lvalue, method, s(:arglist, process(arglist[1]))))
+  def visit_lvar(exp)
+    instrument(s(:lvar, exp[1]))
+  end
+
+  def visit_call(exp)
+    instrument(s(:call, visit(exp[1]), exp[2], s(:arglist, visit(exp[3][1]))))
   end
 
   private

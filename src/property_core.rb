@@ -51,7 +51,8 @@ class Property
     if arity == 0
       @predicate = expr
     else
-      @predicate = PropertyVisitor.proc(expr)
+      @predicate = expr
+      # @predicate = PropertyVisitor.accept(expr)
     end
   end
 end

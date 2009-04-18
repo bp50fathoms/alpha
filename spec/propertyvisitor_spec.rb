@@ -29,6 +29,12 @@ module PropertyVisitorSpec
         'proc { |a, b, _r| _r.store(2, _r.store(0, a).&(_r.store(1, b))) }'
     end
 
+    it 'should treat correctly unary methods'
+
+    it 'should process all?'
+
+    it 'should process any?'
+
     def source(o)
       Ruby2Ruby.new.process(o.to_sexp)
     end

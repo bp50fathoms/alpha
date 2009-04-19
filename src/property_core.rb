@@ -5,7 +5,7 @@ require 'property'
 class Property
   extend Forwardable
 
-  attr_reader :key, :tree, :types
+  attr_reader :cover_goal, :key, :tree, :types
 
   def_delegator :types, :size, :arity
 

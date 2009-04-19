@@ -32,7 +32,7 @@ class PropertyVisitor
   end
 
   def visit_call(exp)
-    if [:&, :|, :==].include?(exp[2])
+    if [:&, :|].include?(exp[2])
       b1, a1 = visit(exp[1])
       b2, a2 = visit(exp[3][1])
       op = { :& => :and, :| => :or, :== => :eql }

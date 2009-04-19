@@ -5,7 +5,7 @@ require 'property'
 class Property
   extend Forwardable
 
-  attr_reader :key, :types
+  attr_reader :key, :tree, :types
 
   def_delegator :types, :size, :arity
 
@@ -51,8 +51,7 @@ class Property
     if arity == 0
       @predicate = expr
     else
-      @predicate = expr
-      # @predicate = PropertyVisitor.accept(expr)
+      @predicate, @tree = PropertyVisitor.accept(expr)
     end
   end
 end

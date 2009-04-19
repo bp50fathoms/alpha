@@ -69,25 +69,6 @@ module PropertyVisitorSpec
         'end'
     end
 
-    it 'should process correctly equality' do
-      b, t = accept { |a,b| a == b }
-      source(b).should ==
-        "proc do |a, b, _r|\n" +
-        "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, a) " +
-        "== _r.store(#{id(t.right_expr)}, b)))\n" +
-        'end'
-    end
-
-    it 'should process correctly inequality' do
-      b, t = accept { |a,b| a != b }
-      source(b).should ==
-        "proc do |a, b, _r|\n" +
-        "  _r.store(#{id(t)}, (not _r.store(#{id(t.expr)}, " +
-        "(_r.store(#{id(t.expr.left_expr)}, a) " +
-        "== _r.store(#{id(t.expr.right_expr)}, b)))))\n" +
-        'end'
-    end
-
     it 'should process correctly universal quantification' do
       b, t = accept { |a| a.all? { |e| e } }
       source(b).should ==
@@ -116,6 +97,25 @@ module PropertyVisitorSpec
         "  else\n    _r.store(#{id(t.else_branch)}, a.d)\n  end)\n" +
         'end'
     end
+
+    # it 'should process correctly inequality' do
+    #   b, t = accept { |a,b| a != b }
+    #   source(b).should ==
+    #     "proc do |a, b, _r|\n" +
+    #     "  _r.store(#{id(t)}, (not _r.store(#{id(t.expr)}, " +
+    #     "(_r.store(#{id(t.expr.left_expr)}, a) " +
+    #     "== _r.store(#{id(t.expr.right_expr)}, b)))))\n" +
+    #     'end'
+    # end
+
+    # it 'should process correctly equality' do
+    #   b, t = accept { |a,b| a == b }
+    #   source(b).should ==
+    #     "proc do |a, b, _r|\n" +
+    #     "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, a) " +
+    #     "== _r.store(#{id(t.right_expr)}, b)))\n" +
+    #     'end'
+    # end
 
     # literals
 

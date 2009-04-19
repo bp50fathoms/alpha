@@ -5,7 +5,7 @@ require 'parse_tree'
 require 'parse_tree_extensions'
 
 
-class PropertyVisitor
+class PredicateVisitor
   def self.accept(block)
     sexp, tree = self.new.visit_body(block.to_sexp)
     ncode = Ruby2Ruby.new.process(sexp)

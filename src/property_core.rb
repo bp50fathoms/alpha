@@ -51,7 +51,7 @@ class Property
     if arity == 0
       @predicate = expr
     else
-      @predicate, @tree = PropertyVisitor.accept(expr)
+      @predicate, @tree = PredicateVisitor.accept(expr)
     end
   end
 end

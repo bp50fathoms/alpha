@@ -1,4 +1,4 @@
-require 'resultcollector'
+require 'property_rcollector'
 
 
 module ResultCollectorSpec

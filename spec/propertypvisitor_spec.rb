@@ -1,17 +1,17 @@
 require 'property'
 
 
-module PropertyVisitorSpec
-  describe PropertyVisitor do
+module PredicateVisitorSpec
+  describe PredicateVisitor do
     it 'should reject blocks with no args' do
       lambda do
-        PropertyVisitor.accept(lambda { true })
+        PredicateVisitor.accept(lambda { true })
       end.should raise_error(ArgumentError, 'arity 0 block')
     end
 
     it 'should reject empty blocks' do
       lambda do
-        PropertyVisitor.accept(lambda { |a| })
+        PredicateVisitor.accept(lambda { |a| })
       end.should raise_error(ArgumentError, 'empty block body')
     end
 
@@ -132,7 +132,7 @@ module PropertyVisitorSpec
     # big example 1
 
     def accept(&block)
-      PropertyVisitor.accept(block)
+      PredicateVisitor.accept(block)
     end
 
     def source(block)

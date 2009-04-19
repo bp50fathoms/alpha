@@ -14,7 +14,7 @@ module CoverVisitorSpec
       g = p.cover_goal
       g.should == { t => [true], t.expr => [false], t.expr.expr => [false],
                     t.expr.expr.left_expr => [true, false],
-                    t.expr.expr.right_expr => [true, false]}
+                    t.expr.expr.right_expr => [true, false] }
     end
   end
 end

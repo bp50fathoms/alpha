@@ -12,6 +12,11 @@ class BinaryExpr
   attrs(:left_expr, :operator, :right_expr)
 end
 
+class QuantExpr
+  include Visitable
+  attrs(:type, :expr)
+end
+
 class Conditional
   include Visitable
   attrs(:condition, :then_branch, :else_branch)

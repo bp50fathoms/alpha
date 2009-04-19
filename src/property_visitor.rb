@@ -33,7 +33,12 @@ class PropertyVisitor
 
   def visit_call(exp)
     if [:&, :|, :==].include?(exp[2])
-      instrument(s(:call, visit(exp[1]), exp[2], s(:arglist, visit(exp[3][1]))))
+      b1, a1 = visit(exp[1])
+      b2, a2 = visit(exp[3][1])
+      op = { :& => :and, :| => :or, :== => :eql }
+      t = BinaryExpr.new(a1, op[exp[2]], a2)
+      s = instrument(s(:call, b1, exp[2], s(:arglist, b2)), t)
+      [s, t]
     else
       t = BoolAtom.new
       s = instrument(exp, t)
@@ -43,12 +48,17 @@ class PropertyVisitor
 
   def visit_iter(exp)
     if [:all?, :any?].include?(exp[1][2])
-      instrument(s(:iter,
-                   s(:call, exp[1][1], exp[1][2], exp[1][3]),
-                   exp[2],
-                   visit(exp[3])))
+      b, a = visit(exp[3])
+      op = { :all? => :all, :any? => :exist }
+      t = QuantExpr.new(op[exp[1][2]], a)
+      s = instrument(s(:iter,
+                       s(:call, exp[1][1], exp[1][2], exp[1][3]),
+                       exp[2], b), t)
+      [s, t]
     else
-      instrument(exp)
+      t = BoolAtom.new
+      s = instrument(exp, t)
+      [s, t]
     end
   end
 
@@ -76,7 +86,12 @@ class PropertyVisitor
   end
 
   def visit_if(exp)
-    instrument(s(:if, instrument(exp[1]), visit(exp[2]), visit(exp[3])))
+    b1, a1 = visit(exp[2])
+    b2, a2 = visit(exp[3])
+    c = BoolAtom.new
+    t = Conditional.new(c , a1, a2)
+    s = instrument(s(:if, instrument(exp[1], c), b1, b2), t)
+    [s, t]
   end
 
   private

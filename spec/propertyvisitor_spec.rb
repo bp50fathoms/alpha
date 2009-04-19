@@ -49,52 +49,73 @@ module PropertyVisitorSpec
         "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, a)" +
         " or _r.store(#{id(t.right_expr)}, b)))\n" +
         'end'
-    #   source(lambda { |a,b| a or b }).should ==
-    #     'proc { |a, b, _r| _r.store(2, (_r.store(0, a) or _r.store(1, b))) }'
     end
 
-    # it 'should process correctly non-lazy conjunction' do
-    #   source(lambda { |a,b| a & b }).should ==
-    #     'proc { |a, b, _r| _r.store(2, _r.store(0, a).&(_r.store(1, b))) }'
-    # end
+    it 'should process correctly non-lazy conjunction' do
+      b, t = accept { |a,b| a & b }
+      source(b).should ==
+        "proc do |a, b, _r|\n" +
+        "  _r.store(#{id(t)}, _r.store(#{id(t.left_expr)}, a)" +
+        ".&(_r.store(#{id(t.right_expr)}, b)))\n" +
+        'end'
+    end
 
-    # it 'should process correctly non-lazy disjunction' do
-    #   source(lambda { |a,b| a.|(b) }).should ==
-    #     'proc { |a, b, _r| _r.store(2, _r.store(0, a).|(_r.store(1, b))) }'
-    # end
+    it 'should process correctly non-lazy disjunction' do
+      b, t = accept { |a,b| a.|(b) }
+      source(b).should ==
+        "proc do |a, b, _r|\n" +
+        "  _r.store(#{id(t)}, _r.store(#{id(t.left_expr)}, a)" +
+        ".|(_r.store(#{id(t.right_expr)}, b)))\n" +
+        'end'
+    end
 
-    # it 'should process correctly equality' do
-    #   source(lambda { |a,b| a == b }).should ==
-    #     'proc { |a, b, _r| _r.store(2, (_r.store(0, a) == _r.store(1, b))) }'
-    # end
+    it 'should process correctly equality' do
+      b, t = accept { |a,b| a == b }
+      source(b).should ==
+        "proc do |a, b, _r|\n" +
+        "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, a) " +
+        "== _r.store(#{id(t.right_expr)}, b)))\n" +
+        'end'
+    end
 
-    # it 'should process correctly inequality' do
-    #   source(lambda { |a,b| a != b }).should ==
-    #     "proc do |a, b, _r|\n" +
-    #     "  _r.store(3, (not _r.store(2, (_r.store(0, a) == _r.store(1, b)))))\n" +
-    #     'end'
-    # end
+    it 'should process correctly inequality' do
+      b, t = accept { |a,b| a != b }
+      source(b).should ==
+        "proc do |a, b, _r|\n" +
+        "  _r.store(#{id(t)}, (not _r.store(#{id(t.expr)}, " +
+        "(_r.store(#{id(t.expr.left_expr)}, a) " +
+        "== _r.store(#{id(t.expr.right_expr)}, b)))))\n" +
+        'end'
+    end
 
-    # it 'should process correctly universal quantification' do
-    #   source(lambda { |a| a.all? { |e| e } }).should ==
-    #     'proc { |a, _r| _r.store(1, a.all? { |e| _r.store(0, e) }) }'
-    # end
+    it 'should process correctly universal quantification' do
+      b, t = accept { |a| a.all? { |e| e } }
+      source(b).should ==
+        "proc do |a, _r|\n" +
+        "  _r.store(#{id(t)}, a.all? { |e| _r.store(#{id(t.expr)}, e) })\n" +
+        'end'
+    end
 
-    # it 'should process correctly existential quantification' do
-    #   source(lambda { |a| a.any? { |e| e.a or e.b } }).should ==
-    #     "proc do |a, _r|\n" +
-    #     '  _r.store(3, a.any? { |e| ' +
-    #     "_r.store(2, (_r.store(0, e.a) or _r.store(1, e.b))) })\n" +
-    #     "end"
-    # end
+    it 'should process correctly existential quantification' do
+      b, t = accept { |a| a.any? { |e| e.a or e.b } }
+      source(b).should ==
+        "proc do |a, _r|\n" +
+        "  _r.store(#{id(t)}, a.any? do |e|\n" +
+        "    _r.store(#{id(t.expr)}, (_r.store(#{id(t.expr.left_expr)}, e.a) " +
+        "or _r.store(#{id(t.expr.right_expr)}, e.b)))\n" +
+        "  end)\n" +
+        'end'
+    end
 
-    # it 'should process correctly conditional expressions' do
-    #   source(lambda { |a| a.b ? a.c : a.d }).should ==
-    #     "proc do |a, _r|\n" +
-    #     "  _r.store(3, _r.store(0, a.b) ? (_r.store(1, a.c)) " +
-    #     ": (_r.store(2, a.d)))\n" +
-    #     'end'
-    # end
+    it 'should process correctly conditional expressions' do
+      b, t = accept { |a| a.b ? a.c : a.d }
+      source(b).should ==
+        "proc do |a, _r|\n" +
+        "  _r.store(#{id(t)}, if _r.store(#{id(t.condition)}, a.b) then\n" +
+        "    _r.store(#{id(t.then_branch)}, a.c)\n" +
+        "  else\n    _r.store(#{id(t.else_branch)}, a.d)\n  end)\n" +
+        'end'
+    end
 
     # literals
 

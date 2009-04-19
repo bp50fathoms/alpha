@@ -52,6 +52,8 @@ class Property
       @predicate = expr
     else
       @predicate, @tree = PredicateVisitor.accept(expr)
+      @cover_goal = Hash[*@tree.accept(CoverVisitor.instance, [true])]
     end
+    @predicate
   end
 end

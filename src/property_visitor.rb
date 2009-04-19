@@ -6,15 +6,11 @@ require 'parse_tree_extensions'
 
 
 class PropertyVisitor
-  @@count = 0
-
-  def self.reset
-    @@count = 0
-  end
-
   def self.accept(block)
-    ncode = Ruby2Ruby.new.process(self.new.visit_body(block.to_sexp))
-    block.binding.eval(ncode)
+    sexp, tree = self.new.visit_body(block.to_sexp)
+    ncode = Ruby2Ruby.new.process(sexp)
+    newblock = block.binding.eval(ncode)
+    [newblock, tree]
   end
 
   def visit(exp)
@@ -23,18 +19,25 @@ class PropertyVisitor
 
   def visit_body(exp)
     raise ArgumentError, 'empty block body' unless exp[3]
-    s(:iter, exp[1], add_arg(exp[2]), visit(exp[3]))
+    a = add_arg(exp[2])
+    b, t = visit(exp[3])
+    s = s(:iter, exp[1], a, b)
+    [s, t]
   end
 
   def visit_lvar(exp)
-    instrument(s(:lvar, exp[1]))
+    t = BoolAtom.new
+    s = instrument(s(:lvar, exp[1]), t)
+    [s, t]
   end
 
   def visit_call(exp)
     if [:&, :|, :==].include?(exp[2])
       instrument(s(:call, visit(exp[1]), exp[2], s(:arglist, visit(exp[3][1]))))
     else
-      instrument(exp)
+      t = BoolAtom.new
+      s = instrument(exp, t)
+      [s, t]
     end
   end
 
@@ -50,15 +53,26 @@ class PropertyVisitor
   end
 
   def visit_not(exp)
-    instrument(s(:not, visit(exp[1])))
+    b, a = visit(exp[1])
+    t = UnaryExpr.new(:not, a)
+    s = instrument(s(:not, b), t)
+    [s, t]
   end
 
   def visit_and(exp)
-    instrument(s(:and, visit(exp[1]), visit(exp[2])))
+    b_expr(exp, :and)
   end
 
   def visit_or(exp)
-    instrument(s(:or, visit(exp[1]), visit(exp[2])))
+    b_expr(exp, :or)
+  end
+
+  def b_expr(exp, op)
+    b1, a1 = visit(exp[1])
+    b2, a2 = visit(exp[2])
+    t = BinaryExpr.new(a1, op, a2)
+    s = instrument(s(op, b1, b2), t)
+    [s, t]
   end
 
   def visit_if(exp)
@@ -78,12 +92,13 @@ class PropertyVisitor
     end
   end
 
-  def instrument(expr)
-    s = s(:call,
-          s(:call, nil, :_r, s(:arglist)),
-          :store,
-          s(:arglist, s(:lit, @@count), expr))
-    @@count += 1
-    s
+  def instrument(expr, o)
+    s(:call,
+      s(:call, nil, :_r, s(:arglist)),
+      :store,
+      s(:arglist,
+        s(:call, s(:const, :ObjectSpace), :_id2ref,
+          s(:arglist, s(:lit, o.object_id))),
+        expr))
   end
 end

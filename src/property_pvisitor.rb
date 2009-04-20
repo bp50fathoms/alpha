@@ -58,8 +58,8 @@ class PredicateVisitor
       t = BinaryExpr.new(a1, op[exp[2]], a2)
       s = instrument(s(:call, b1, exp[2], s(:arglist, b2)), t)
       [s, t]
-    elsif exp[2] == :call and pcomposition(exp[1])
-      t = Composition.new(exp[1][3][1][1])
+    elsif exp[1] == s(:const, :Property) and exp[2].is_a?(Symbol)
+      t = Composition.new(exp[2])
       exp[3] << s(:lvar, :_r)
       s = instrument(exp, t)
       [s, t]
@@ -87,11 +87,11 @@ class PredicateVisitor
   end
 
   def visit_if(exp)
-    b1, a1 = visit(exp[2])
-    b2, a2 = visit(exp[3])
-    c = BoolAtom.new
-    t = Conditional.new(c , a1, a2)
-    s = instrument(s(:if, instrument(exp[1], c), b1, b2), t)
+    b1, a1 = visit(exp[1])
+    b2, a2 = visit(exp[2])
+    b3, a3 = visit(exp[3])
+    t = Conditional.new(a1 , a2, a3)
+    s = instrument(s(:if, b1, b2, b3), t)
     [s, t]
   end
 
@@ -114,11 +114,6 @@ class PredicateVisitor
     t = BinaryExpr.new(a1, op, a2)
     s = instrument(s(op, b1, b2), t)
     [s, t]
-  end
-
-  def pcomposition(exp)
-    exp[0] == :call and exp[1] == s(:const, :Property) and exp[2] == :[] and
-      exp[3][0] == :arglist and exp[3][1][0] == :lit
   end
 
   def instrument(expr, o)

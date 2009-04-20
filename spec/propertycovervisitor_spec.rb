@@ -16,5 +16,15 @@ module CoverVisitorSpec
                     t.expr.expr.left_expr => [true, false],
                     t.expr.expr.right_expr => [true, false] }
     end
+
+    it 'should compute a correct coverage goal for a composed property' do
+      property :p => [String] do |x|
+        x.length == 0 or x == 'a'
+      end
+
+      property :q => [Array] do |x|
+        x.all? { |e| Property.p(e) }
+      end
+    end
   end
 end

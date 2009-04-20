@@ -108,11 +108,11 @@ module PredicateVisitorSpec
     end
 
     it 'should process correctly property composition' do
-      b, t = accept { |a| f(a) and Property[:b].call(a) }
+      b, t = accept { |a| f(a) and Property.b(a) }
       source(b).should ==
         "proc do |a, _r|\n" +
         "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, f(a)) " +
-        "and _r.store(#{id(t.right_expr)}, Property[:b].call(a, _r))))\n" +
+        "and _r.store(#{id(t.right_expr)}, Property.b(a, _r))))\n" +
         "end"
     end
 

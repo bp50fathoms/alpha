@@ -31,6 +31,10 @@ class CoverVisitor
     }
   }
 
+  def visit_boolatom(e, v)
+    [e, v]
+  end
+
   def visit_unaryexpr(e, v)
     sub = m(:not, v)
     [e, v] + visit(e.expr, sub)
@@ -51,8 +55,8 @@ class CoverVisitor
       visit(e.right_branch, v)
   end
 
-  def visit_boolatom(e, v)
-    [e, v]
+  def visit_composition(e, v)
+    visit(Property[e.property].tree, v)
   end
 
   private

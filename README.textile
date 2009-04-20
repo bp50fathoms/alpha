@@ -11,3 +11,35 @@ h2. Requirements
 fn1. are only necessary for executing the @rakefile@ which runs the
 unit tests and generates test and code coverage reports. Otherwise,
 the basic requirements are enough.
+
+h2. File Structure
+
+Each item at level 1 in the following list represents a component of
+the framework. Each item at level 2 indicates a source file containing
+part of the implementation of the corresponding component. Those files
+are stored in the @src/@ directory (see *Git Repository* for more
+information about the file structure).
+
+All components, except the Libraries, have a façade file in case they
+consist on several files. Just importing (@require@) the façade is
+sufficient for accessing all the logic implemented by the
+component. Façades are labelled <sup>f</sup>. It is usually the case
+that they have the same name as the component.
+
+* Property: property abstraction
+** @property@
+** @property_class@: @Property@ class definition (property namespace)
+** @property_core@: @Property@ instances definition
+** @property_ast@: AST for representing a simplified view of predicates
+** @property_rcollector@: @ResultCollector@ stores subexpression
+   results of instrumented predicates
+** @property_pvisitor@: @PropertyVisitor@ instruments @Properties@
+   and builds a simplied AST
+** @property_covervisitor@: @CoverVisitor@ computes property coverage goals
+** @property_covertable@: @CoverTable@ stores property coverage
+** @property_language@: DSL for defining properties
+
+* Libraries
+** @decorator@: Decorator design pattern
+** @initializer@: Facility for simplified constructors, à la CLOS
+** @visitable@: Visitor design pattern

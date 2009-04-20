@@ -5,13 +5,13 @@ module PredicateVisitorSpec
   describe PredicateVisitor do
     it 'should reject blocks with no args' do
       lambda do
-        PredicateVisitor.accept(lambda { true })
+        accept { true }
       end.should raise_error(ArgumentError, 'arity 0 block')
     end
 
     it 'should reject empty blocks' do
       lambda do
-        PredicateVisitor.accept(lambda { |a| })
+        accept { |a| }
       end.should raise_error(ArgumentError, 'empty block body')
     end
 
@@ -23,6 +23,15 @@ module PredicateVisitorSpec
     it 'should add an instrumentation parameter for blocks of arity > 1' do
       b, t = accept { |a,b| a }
       source(b).should == "proc { |a, b, _r| _r.store(#{id(t)}, a) }"
+    end
+
+    it 'should reject properties containing non-expression statements gracefully' do
+      lambda do
+        accept do |a|
+          while true
+          end
+        end
+      end.should raise_error(ArgumentError, 'block containing unsupported elements')
     end
 
     it 'should process correctly negation' do
@@ -98,6 +107,15 @@ module PredicateVisitorSpec
         'end'
     end
 
+    it 'should process correctly property composition' do
+      b, t = accept { |a| f(a) and Property[:b].call(a) }
+      source(b).should ==
+        "proc do |a, _r|\n" +
+        "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, f(a)) " +
+        "and _r.store(#{id(t.right_expr)}, Property[:b].call(a, _r))))\n" +
+        "end"
+    end
+
     # it 'should process correctly inequality' do
     #   b, t = accept { |a,b| a != b }
     #   source(b).should ==
@@ -116,18 +134,6 @@ module PredicateVisitorSpec
     #     "== _r.store(#{id(t.right_expr)}, b)))\n" +
     #     'end'
     # end
-
-    # literals
-
-    # implication and lazy implication
-
-    # aritmetic comparisons
-
-    # property composition
-
-    # instance exec
-
-    # begin end
 
     # big example 1
 

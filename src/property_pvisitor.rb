@@ -14,7 +14,11 @@ class PredicateVisitor
   end
 
   def visit(exp)
-    send("visit_#{exp.first}", exp)
+    begin
+      send("visit_#{exp.first}", exp)
+    rescue NoMethodError
+      raise ArgumentError, 'block containing unsupported elements'
+    end
   end
 
   def visit_body(exp)
@@ -31,6 +35,21 @@ class PredicateVisitor
     [s, t]
   end
 
+  def visit_not(exp)
+    b, a = visit(exp[1])
+    t = UnaryExpr.new(:not, a)
+    s = instrument(s(:not, b), t)
+    [s, t]
+  end
+
+  def visit_and(exp)
+    b_expr(exp, :and)
+  end
+
+  def visit_or(exp)
+    b_expr(exp, :or)
+  end
+
   def visit_call(exp)
     if [:&, :|].include?(exp[2])
       b1, a1 = visit(exp[1])
@@ -38,6 +57,11 @@ class PredicateVisitor
       op = { :& => :and, :| => :or, :== => :eql }
       t = BinaryExpr.new(a1, op[exp[2]], a2)
       s = instrument(s(:call, b1, exp[2], s(:arglist, b2)), t)
+      [s, t]
+    elsif exp[2] == :call and pcomposition(exp[1])
+      t = Composition.new(exp[1][3][1][1])
+      exp[3] << s(:lvar, :_r)
+      s = instrument(exp, t)
       [s, t]
     else
       t = BoolAtom.new
@@ -62,29 +86,6 @@ class PredicateVisitor
     end
   end
 
-  def visit_not(exp)
-    b, a = visit(exp[1])
-    t = UnaryExpr.new(:not, a)
-    s = instrument(s(:not, b), t)
-    [s, t]
-  end
-
-  def visit_and(exp)
-    b_expr(exp, :and)
-  end
-
-  def visit_or(exp)
-    b_expr(exp, :or)
-  end
-
-  def b_expr(exp, op)
-    b1, a1 = visit(exp[1])
-    b2, a2 = visit(exp[2])
-    t = BinaryExpr.new(a1, op, a2)
-    s = instrument(s(op, b1, b2), t)
-    [s, t]
-  end
-
   def visit_if(exp)
     b1, a1 = visit(exp[2])
     b2, a2 = visit(exp[3])
@@ -105,6 +106,19 @@ class PredicateVisitor
       asgn[1] << param
       asgn
     end
+  end
+
+  def b_expr(exp, op)
+    b1, a1 = visit(exp[1])
+    b2, a2 = visit(exp[2])
+    t = BinaryExpr.new(a1, op, a2)
+    s = instrument(s(op, b1, b2), t)
+    [s, t]
+  end
+
+  def pcomposition(exp)
+    exp[0] == :call and exp[1] == s(:const, :Property) and exp[2] == :[] and
+      exp[3][0] == :arglist and exp[3][1][0] == :lit
   end
 
   def instrument(expr, o)

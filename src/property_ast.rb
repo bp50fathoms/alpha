@@ -22,6 +22,11 @@ class Conditional
   attrs(:condition, :then_branch, :else_branch)
 end
 
+class Composition
+  include Visitable
+  attrs(:property)
+end
+
 class BoolAtom
   include Visitable
 end

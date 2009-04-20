@@ -27,6 +27,11 @@ class Composition
   attrs(:property)
 end
 
+class BoolConst
+  include Visitable
+  attrs(:value)
+end
+
 class BoolAtom
   include Visitable
 end

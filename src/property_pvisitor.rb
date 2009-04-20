@@ -35,6 +35,14 @@ class PredicateVisitor
     [s, t]
   end
 
+  def visit_true(exp)
+    [exp, BoolConst.new(true)]
+  end
+
+  def visit_false(exp)
+    [exp, BoolConst.new(false)]
+  end
+
   def visit_not(exp)
     b, a = visit(exp[1])
     t = UnaryExpr.new(:not, a)

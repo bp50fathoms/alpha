@@ -48,6 +48,17 @@ module CoverVisitorSpec
                     t2.left_expr => [false], t2.right_expr => [false] }
     end
 
-    it 'should complain for some tautologies'
+    it 'should compute a correct coverage goal for true' do
+      p = property(:p => [String]) { |x| true }
+      p.cover_goal == {}
+    end
+
+    it 'should complain for some tautological properties (trivially false)' do
+      lambda do
+        p = property :p => [Array] do |x|
+          not x.all? { |e| f(e) or true }
+        end
+      end.should raise_error(ArgumentError, 'property can be trivially falsified')
+    end
   end
 end

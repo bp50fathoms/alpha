@@ -34,6 +34,19 @@ module PredicateVisitorSpec
       end.should raise_error(ArgumentError, 'block containing unsupported elements')
     end
 
+    it 'should process correctly Boolean literals (true)' do
+      b, t = accept { |a| true }
+      source(b).should == 'proc { |a, _r| true }'
+    end
+
+    it 'should process correctly Boolean literals (false)' do
+      b, t = accept { |a| a or false }
+      source(b).should ==
+        "proc do |a, _r|\n" +
+        "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, a) or false))\n" +
+        'end'
+    end
+
     it 'should process correctly negation' do
       b, t = accept { |a| not a }
       source(b).should ==

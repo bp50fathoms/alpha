@@ -31,6 +31,13 @@ class CoverVisitor
     [e, v]
   end
 
+  def visit_boolconst(e, v)
+    unless v.include?(e.value)
+      raise ArgumentError, 'property can be trivially falsified'
+    end
+    []
+  end
+
   def visit_unaryexpr(e, v)
     sub = m(:not, v)
     [e, v] + visit(e.expr, sub)

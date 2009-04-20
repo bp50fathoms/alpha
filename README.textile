@@ -19,8 +19,8 @@ All components, except the Libraries, have a façade file in case they consist o
 Since the code is thoroughly unit tested, most classes have their RSpec counterpart in the @spec/@ directory. When this is the case, files are labelled <sup>s</sup>.
 
 * Property: property abstraction
-** @property@ <sup>f</sup>
-** @property_class@: @Property@ class definition (property namespace)
+** @property@<sup>f</sup>
+** @property_class@<sup>s</sup>: @Property@ class definition (property namespace)
 ** @property_core@: @Property@ instances definition
 ** @property_ast@: AST for representing a simplified view of predicates
 ** @property_rcollector@: @ResultCollector@ stores subexpression results of instrumented predicates
@@ -30,6 +30,6 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 ** @property_language@: DSL for defining properties
 
 * Libraries
-** @decorator@: Decorator design pattern
-** @initializer@: Facility for simplified constructors, à la CLOS
-** @visitable@: Visitor design pattern
+** @decorator@<sup>s</sup>: Decorator design pattern
+** @initializer@<sup>s</sup>: Facility for simplified constructors, à la CLOS
+** @visitable@<sup>s</sup>: Visitor design pattern

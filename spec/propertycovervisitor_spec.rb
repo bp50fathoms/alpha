@@ -17,14 +17,37 @@ module CoverVisitorSpec
                     t.expr.expr.right_expr => [true, false] }
     end
 
+    it 'should compute a correct coverage goal for a conditional property' do
+      p = property :p => [String] do |x|
+        if x.length < 2 then
+          x.include?('a')
+        else
+          x.include?('abc')
+        end
+      end
+
+      t = p.tree
+      g = p.cover_goal
+      g.should == { t => [true], t.condition => [true, false],
+                    t.then_branch => [true], t.else_branch => [true] }
+    end
+
     it 'should compute a correct coverage goal for a composed property' do
-      property :p => [String] do |x|
+      p = property :p => [String] do |x|
         x.length == 0 or x == 'a'
       end
 
-      property :q => [Array] do |x|
-        x.all? { |e| Property.p(e) }
+      q = property :q => [Array] do |x|
+        !x.all? { |e| Property.p(e) }
       end
+
+      t = q.tree
+      t2 = p.tree
+      g = q.cover_goal
+      g.should == { t => [true], t.expr => [false], t2 => [false],
+                    t2.left_expr => [false], t2.right_expr => [false] }
     end
+
+    it 'should complain for some tautologies'
   end
 end

@@ -7,29 +7,25 @@ class CoverVisitor
   T = {
     :and => {
       true => [true],
-      false => [true, false]
-    },
+      false => [true, false] },
 
     :or => {
       true => [true, false],
-      false => [false]
-    },
+      false => [false] },
 
     :not => {
       true => [false],
-      false => [true]
-    },
+      false => [true] },
 
     :all => {
       true => [true],
-      false => [true, false]
-    },
+      false => [true, false] },
 
     :exist => {
       true => [true, false],
-      false => [false]
-    }
+      false => [false] }
   }
+
 
   def visit_boolatom(e, v)
     [e, v]
@@ -51,8 +47,8 @@ class CoverVisitor
   end
 
   def visit_conditional(e, v)
-    [e, v] + visit(e.condition, v) + visit(e.left_branch, v) +
-      visit(e.right_branch, v)
+    [e, v] + visit(e.condition, [true, false]) + visit(e.then_branch, v) +
+      visit(e.else_branch, v)
   end
 
   def visit_composition(e, v)

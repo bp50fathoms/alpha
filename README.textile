@@ -31,10 +31,12 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 ** @property_covertable@ <sup>s</sup>: _CoverTable_ stores property coverage
 ** @property_language@ <sup>s</sup>: DSL for defining properties
 
+
 * Pipeline: pipeline abstraction, after the Pipes & Filters architectural pattern
 ** @pipeline@ <sup>f,s</sup>: pipeline interfaces and partial implementations
 ** @plist@ <sup>s</sup>: _PList_, Wrapper of _Array_, the data to flow along the pipeline
 ** @action@ <sup>s</sup>: utility filters for placing arbitrary code on the pipeline
+
 
 * Libraries
 ** @decorator@ <sup>s</sup>: Decorator design pattern

@@ -7,9 +7,10 @@ class CoverTable
   end
 
   def add_result(rc)
-    # solo actualizar valores contenidos en la tabla
     rc.result.each_pair do |k,v|
-
+      if table.has_key?(k)
+        v.each { |e| table[k][e] += 1 }
+      end
     end
   end
 
@@ -18,6 +19,11 @@ class CoverTable
   end
 
   def cover_factor
-    # numero de entradas con todas las subentradas > 0
+    if table.empty?
+      1.0
+    else
+      covered = table.values.select { |t| t.values.all? { |e| e > 0 } }.length
+      covered / table.length.to_f
+    end
   end
 end

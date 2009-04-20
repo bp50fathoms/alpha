@@ -26,9 +26,9 @@ module ResultCollectorSpec
       l = lambda do |a,r|
         r.store(1, a.all?{ |e| r.store(2, e > 0) })
       end
-      l.call([1, 0], r = ResultCollector.new)
+      l.call([1, 2, 0], r = ResultCollector.new)
       r.result[1].should == [false]
-      r.result[2].should == [true, false]
+      r.result[2].should == [true, true, false]
     end
   end
 end

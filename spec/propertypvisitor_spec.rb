@@ -113,7 +113,16 @@ module PredicateVisitorSpec
         "proc do |a, _r|\n" +
         "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, f(a)) " +
         "and _r.store(#{id(t.right_expr)}, Property.b(a, _r))))\n" +
-        "end"
+        'end'
+    end
+
+    it 'should not process unknown method calls and blocks' do
+      b, t = accept { |a, b| q(a && b) or r { a } }
+      source(b).should ==
+        "proc do |a, b, _r|\n" +
+        "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, q((a and b))) or " +
+        "_r.store(#{id(t.right_expr)}, r { a })))\n" +
+        'end'
     end
 
     # it 'should process correctly inequality' do

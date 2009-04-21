@@ -13,9 +13,6 @@ class Property
     if properties.has_key?(name)
       narg = args.size
       arity = properties[name].arity
-      if narg != arity
-        raise ArgumentError, "wrong number of arguments (#{narg} for #{arity})"
-      end
       properties[name].call(*args)
     else
       super

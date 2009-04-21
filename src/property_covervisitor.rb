@@ -50,7 +50,7 @@ class CoverVisitor
 
   def visit_quantexpr(e, v)
     sub = m(e.type, v)
-    [e, v] + visit(e.expr, v)
+    [e, v] + visit(e.expr, sub)
   end
 
   def visit_conditional(e, v)

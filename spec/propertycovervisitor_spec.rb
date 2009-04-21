@@ -5,6 +5,16 @@ module CoverVisitorSpec
   describe CoverVisitor do
     it_should_behave_like 'Property'
 
+    it 'should compute a correct coverage goal for a universally q. property' do
+      property :p => [Array] do |x|
+        !x.all? { |e| f(e) }
+      end
+      p = Property[:p]
+      t = p.tree
+      g = p.cover_goal
+      g.should == { t => [true], t.expr => [false], t.expr.expr => [true, false] }
+    end
+
     it 'should compute a correct coverage goal for an existentially q. property' do
       property :p => [Array] do |x|
         not x.any? { |e| p(e) and q(e) }
@@ -44,8 +54,8 @@ module CoverVisitorSpec
       t = q.tree
       t2 = p.tree
       g = q.cover_goal
-      g.should == { t => [true], t.expr => [false], t2 => [false],
-                    t2.left_expr => [false], t2.right_expr => [false] }
+      g.should == { t => [true], t.expr => [false], t2 => [true, false],
+                    t2.left_expr => [true, false], t2.right_expr => [true, false] }
     end
 
     it 'should compute a correct coverage goal for true' do
@@ -56,7 +66,7 @@ module CoverVisitorSpec
     it 'should complain for some tautological properties (trivially false)' do
       lambda do
         p = property :p => [Array] do |x|
-          not x.all? { |e| f(e) or true }
+          false
         end
       end.should raise_error(ArgumentError, 'property can be trivially falsified')
     end

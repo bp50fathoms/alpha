@@ -59,8 +59,16 @@ class DOTVisitor
   end
 
   def add_node(node, label)
+    info = property.cover_table.table[node]
+    v = info.values
+    if v.include?(0)
+      color = 'red'
+    else
+      mrate = v.inject(:+) * 0.1
+      color = (!v.select { |e| e < mrate }.empty? ? 'orange' : 'green')
+    end
     @nodes[node.object_id] = @graph.add_node(key(node), { :label => label,
-                                               :color => 'green',
+                                               :color => color,
                                                :style => 'filled' })
     node
   end

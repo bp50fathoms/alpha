@@ -39,6 +39,19 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 ** @action@ <sup>s</sup>: utility filters for placing arbitrary code on the pipeline
 
 
+* UI
+** @ui@ <sup>s</sup>
+** @ui_protocol@
+
+
+* BatchUI
+** @batchui@
+
+
+* TextUI
+** @textui@
+
+
 * Libraries
 ** @decorator@ <sup>s</sup>: Decorator design pattern
 ** @initializer@ <sup>s</sup>: Facility for simplified constructors, à la CLOS

@@ -8,6 +8,7 @@ DOC_DIR = 'doc'
 RCOV_DIR = 'rcov'
 SPEC_DIR = 'spec'
 SRC_DIR = 'src'
+OUT_DIR = 'out'
 
 SPEC_DOC = "#{DOC_DIR}/#{SPEC_DIR}/spec.html"
 RCOV_DOC = "#{DOC_DIR}/#{RCOV_DIR}"
@@ -19,9 +20,10 @@ EXCLUDE_RCOV = "#{SPEC_DIR},#{Gem.dir},#{EXCLUDES_SRC}"
 
 desc 'Default build'
 task :default => :spec
+task :spec => :out
 
 desc 'Nightly build'
-task :nightly => [:doc_spec, :rcov_spec]
+task :nightly => [:out, :doc_spec, :rcov_spec]
 
 task :doc_spec => :dirs
 task :rcov_spec => :dirs
@@ -52,6 +54,17 @@ RAKE::SpecTask.new do |t|
   t.rcov_opts = ['--exclude', EXCLUDE_RCOV]
   common_opts(t)
 end
+
+
+desc "Create dir for output of certain specs, clean it if it exists already"
+task :out do
+  if Dir.entries('.').include?(OUT_DIR)
+    Dir['out/*'].each { |f| File.delete(f) }
+  else
+    Dir.mkdir("./#{OUT_DIR}")
+  end
+end
+
 
 desc "Create all doc dirs if they don't exist already"
 task :dirs do

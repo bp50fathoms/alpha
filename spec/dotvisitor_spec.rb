@@ -21,7 +21,7 @@ module DOTVisitorSpec
     end
 
     def graphviz
-      g = GraphViz.new('g', :output => 'pdf', :file => "#{@n}.pdf")
+      g = GraphViz.new('g', :output => 'pdf', :file => "out/#{@n}.pdf")
       @n += 1
       g
     end
@@ -48,7 +48,6 @@ module DOTVisitorSpec
     end
 
     it 'should plot correctly warnings when case distribution is uneven' do
-      # uneven brutal
       g = graphviz
       p = property :p => [Array] do |a|
         a.any? { |e| e > 0 }

@@ -43,4 +43,7 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 ** @decorator@ <sup>s</sup>: Decorator design pattern
 ** @initializer@ <sup>s</sup>: Facility for simplified constructors, à la CLOS
 ** @lineutils@ <sup>s</sup>
+** @permutations@
+** @progressbar@ <sup>s</sup>
+** @scrollpane@
 ** @visitable@ <sup>s</sup>: Visitor design pattern

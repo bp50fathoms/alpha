@@ -1,4 +1,4 @@
-require 'visitable'
+require 'visitor'
 
 
 class Foo; include Visitable end

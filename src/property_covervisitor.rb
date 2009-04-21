@@ -1,4 +1,5 @@
 require 'singleton'
+require 'visitor'
 
 
 class CoverVisitor
@@ -69,7 +70,5 @@ class CoverVisitor
     v.map { |e| T[op][e] }.flatten.uniq
   end
 
-  def visit(object, *args)
-    object.accept(self, *args)
-  end
+  include Visit
 end

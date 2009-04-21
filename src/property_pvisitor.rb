@@ -13,20 +13,22 @@ class PredicateVisitor
     [newblock, tree]
   end
 
-  def visit(exp)
-    begin
-      send("visit_#{exp.first}", exp)
-    rescue NoMethodError
-      raise ArgumentError, 'block containing unsupported elements'
-    end
-  end
-
   def visit_body(exp)
     raise ArgumentError, 'empty block body' unless exp[3]
     a = add_arg(exp[2])
     b, t = visit(exp[3])
     s = s(:iter, exp[1], a, b)
     [s, t]
+  end
+
+  private
+
+  def visit(exp)
+    begin
+      send("visit_#{exp.first}", exp)
+    rescue NoMethodError
+      raise ArgumentError, 'block containing unsupported elements'
+    end
   end
 
   def visit_lvar(exp)

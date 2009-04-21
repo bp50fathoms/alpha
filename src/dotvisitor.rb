@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'graphviz'
+require 'visitor'
 
 
 class DOTVisitor
@@ -81,7 +82,5 @@ class DOTVisitor
     @graph.add_edge(key(parent), key(child))
   end
 
-  def visit(object, *args)
-    object.accept(self, *args)
-  end
+  include Visit
 end

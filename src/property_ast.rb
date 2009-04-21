@@ -1,5 +1,5 @@
 require 'initializer'
-require 'visitable'
+require 'visitor'
 
 
 class UnaryExpr

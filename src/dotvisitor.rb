@@ -40,7 +40,7 @@ class DOTVisitor
   end
 
   def visit_boolconst(e)
-    add_node(e, e.value.to_s)
+    addcnode(e, 'green', e.value.to_s)
   end
 
   def visit_boolatom(e)
@@ -67,6 +67,10 @@ class DOTVisitor
       mrate = v.inject(:+) * 0.1
       color = (!v.select { |e| e < mrate }.empty? ? 'orange' : 'green')
     end
+    addcnode(node, color, label)
+  end
+
+  def addcnode(node, color, label)
     @nodes[node.object_id] = @graph.add_node(key(node), { :label => label,
                                                :color => color,
                                                :style => 'filled' })

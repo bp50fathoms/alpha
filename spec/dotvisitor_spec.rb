@@ -17,16 +17,25 @@ module DOTVisitorSpec
     end
 
     before(:all) do
-      @n = 0
+      $n = 0
     end
 
-    def graphviz
-      g = GraphViz.new('g', :output => 'pdf', :file => "out/#{@n}.pdf")
-      @n += 1
-      g
+    before(:each) do
+      @r = ResultCollector.new
     end
 
-    it 'should plot correctly composed properties' do
+    after(:each) do
+      g = GraphViz.new('g', :output => 'pdf', :file => "out/#{$n}.pdf")
+      $n += 1
+      c = CoverTable.new(@p.cover_goal)
+      c.add_result(@r)
+      dp = P.new(@p, c)
+      DOTVisitor.new(g, dp)
+      g.output
+      @r = @p = nil
+    end
+
+    #it 'should plot correctly composed properties' do
       # composicion brutal
 
       # g = graphviz
@@ -45,20 +54,65 @@ module DOTVisitorSpec
       # dp = P.new(p, c)
       # DOTVisitor.new(g, dp)
       # g.output
+    #end
+
+    it 'should plot correctly a green success tree when coverage is achieved' do
+      @p = property :p => [String] do |a|
+        not a.length < 0
+      end
+      @p.call('', @r)
     end
 
-    it 'should plot correctly warnings when case distribution is uneven' do
-      g = graphviz
-      p = property :p => [Array] do |a|
+    it 'should plot correctly red errors when coverage is not achieved' do
+      @p = property :p => [String] do |a|
+        (a.length > 1) | (a.length <= 1)
+      end
+      @p.call('', @r)
+    end
+
+    it 'should plot correctly orange warnings when case distribution is uneven' do
+      @p = property :p => [Array] do |a|
         a.any? { |e| e > 0 }
       end
-      r = ResultCollector.new
-      c = CoverTable.new(p.cover_goal)
-      p.call([-1] * 1000 + [1], r)
-      c.add_result(r)
-      dp = P.new(p, c)
-      DOTVisitor.new(g, dp)
-      g.output
+      @p.call([-1] * 1000 + [1], @r)
+    end
+
+    it 'should deal correctly with Boolean constants' do
+      @p = property :p => [String] do |a|
+        true
+      end
+    end
+
+    it 'should deal correctly with conditionals' do
+      @p = property :p => [String] do |a|
+        if a.length > 0
+          a.length > 0
+        else
+          a.length == 0
+        end
+      end
+      @p.call('a', @r)
+      @p.call('', @r)
+    end
+
+    it 'should deal correctly with property composition' do
+      property :s => [String] do |a|
+        a.length <= -1
+      end
+
+      property :q => [String, String] do |a,b|
+        (a == b) | Property.s(b)
+      end
+
+      property :r => [String] do |a|
+        a.length < 0
+      end
+
+      @p = property :p => [String, String] do |a,b|
+        Property.q(a,b) | (not Property.r(a))
+      end
+
+      @p.call('a', 'b', @r)
     end
   end
 end

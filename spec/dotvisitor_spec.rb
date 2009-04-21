@@ -1,19 +1,14 @@
-require 'dotvisitor'
-require 'property'
 require 'decorator'
+require 'dotvisitor'
+require 'initializer'
+require 'property'
 
 
 module DOTVisitorSpec
   describe DOTVisitor do
     class P
       include Decorator
-
-      attr_reader :decorated, :cover_table
-
-      def initialize(p, ct)
-        @decorated = p
-        @cover_table = ct
-      end
+      attrs(:decorated, :cover_table)
     end
 
     before(:all) do
@@ -34,27 +29,6 @@ module DOTVisitorSpec
       g.output
       @r = @p = nil
     end
-
-    #it 'should plot correctly composed properties' do
-      # composicion brutal
-
-      # g = graphviz
-      # property :q => [String] do |s|
-      #   (s == 'a') | (s == 'b')
-      # end
-      # p = property :p => [String, Array] do |a,b|
-      #   (b.all? { |e| e > 0 }) | (Property.q(a))
-      # end
-      # r = ResultCollector.new
-      # c = CoverTable.new(p.cover_goal)
-      # p.call('a', [1,2,3,0], r)
-      # p.call('b', [-1], r)
-      # p.call('c', [1,2], r)
-      # c.add_result(r)
-      # dp = P.new(p, c)
-      # DOTVisitor.new(g, dp)
-      # g.output
-    #end
 
     it 'should plot correctly a green success tree when coverage is achieved' do
       @p = property :p => [String] do |a|

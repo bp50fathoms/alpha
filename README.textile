@@ -40,11 +40,11 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 
 
 * Runner
-** @runner@ <sup>h</sup>
+** @runner@ <sup>f,p</sup>
 
 
 * Strategy
-** @strategy@ <sup>h</sup>
+** @strategy@ <sup>f,p</sup>
 
 
 * Human
@@ -55,6 +55,14 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 * @random_combinators@ <sup>s</sup>
 * @random_string@ <sup>s</sup>
 * @random_strategy@ <sup>s</sup>
+
+
+* Exhaustive
+** @exhaustive@ <sup>f,h</sup>
+** @exhaustive_combinators@ <sup>s</sup>
+** @exhaustive_lazy@ <sup>s</sup>
+** @exhaustive_string@ <sup>s</sup>
+** @exhaustive_strategy@ <sup>s</sup>
 
 
 * UI

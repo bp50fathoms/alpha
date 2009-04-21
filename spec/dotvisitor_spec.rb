@@ -96,23 +96,19 @@ module DOTVisitorSpec
     end
 
     it 'should deal correctly with property composition' do
-      property :s => [String] do |a|
-        a.length <= -1
+      property :r => [Fixnum] do |a|
+        a >= 0
       end
 
-      property :q => [String, String] do |a,b|
-        (a == b) | Property.s(b)
+      property :q => [Array] do |a|
+        a.any? { |e| Property.r(e) }
       end
 
-      property :r => [String] do |a|
-        a.length < 0
+      @p = property :p => [Array] do |a|
+        not Property.q(a)
       end
 
-      @p = property :p => [String, String] do |a,b|
-        Property.q(a,b) | (not Property.r(a))
-      end
-
-      @p.call('a', 'b', @r)
+      @p.call([-1, -2, -3] * 20, @r)
     end
   end
 end

@@ -99,9 +99,9 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 
 * Libraries
 ** @decorator@ <sup>s</sup>: Decorator design pattern
-** @initializer@ <sup>s</sup>: Facility for simplified constructors, à la CLOS
-** @lineutils@ <sup>s</sup>
-** @permutations@
-** @progressbar@ <sup>s</sup>
-** @scrollpane@
+** @initializer@ <sup>s</sup>: simplified constructors through metaprogramming, à la CLOS
+** @lineutils@ <sup>s</sup>: line manipulation functions to fit screen size
+** @permutations@: Lisp-like macro for generating permutations
+** @progressbar@ <sup>s</sup>: text-mode progress bar UI component
+** @scrollpane@: text-mode interactive scroll pane UI component
 ** @visitable@ <sup>s</sup>: Visitor design pattern

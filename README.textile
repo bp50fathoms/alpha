@@ -65,6 +65,11 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 ** @exhaustive_strategy@ <sup>s</sup>
 
 
+* Historic
+** @historic@ <sup>f,s</sup>
+** @errordatabase@ <sup>s</sup>
+
+
 * UI
 ** @ui@ <sup>s</sup>
 ** @ui_protocol@

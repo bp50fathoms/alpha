@@ -14,7 +14,7 @@ module CoverTableSpec
 
       it 'should not add results that are not in the coverage goal' do
         t = @ct.table.clone
-        s = rc({ 88 => [true, false], 132 => [1.0, 1.0] })
+        s = rc({ 2 => [false], 88 => [true, false], 132 => [1.0, 1.0] })
         @ct.add_result(s)
         @ct.table.should == t
       end

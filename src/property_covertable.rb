@@ -9,7 +9,7 @@ class CoverTable
   def add_result(rc)
     rc.result.each_pair do |k,v|
       if table.has_key?(k)
-        v.each { |e| table[k][e] += 1 }
+        v.each { |e| table[k][e] += 1 if table[k][e] }
       end
     end
   end

@@ -58,6 +58,14 @@ module CoverVisitorSpec
                     t2.left_expr => [true, false], t2.right_expr => [true, false] }
     end
 
+    it 'should reject composition with undefined properties' do
+      lambda do
+        p = property :p => [String] do |x|
+          Property.q(x)
+        end
+      end.should raise_error(ArgumentError, 'unknown property q')
+    end
+
     it 'should compute a correct coverage goal for true' do
       p = property(:p => [String]) { |x| true }
       p.cover_goal == {}

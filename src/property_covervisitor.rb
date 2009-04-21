@@ -59,6 +59,7 @@ class CoverVisitor
   end
 
   def visit_composition(e, v)
+    raise ArgumentError, "unknown property #{e.property}" unless Property[e.property]
     visit(Property[e.property].tree, v)
   end
 

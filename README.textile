@@ -43,6 +43,14 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 ** @runner@ <sup>f,p</sup>
 
 
+* Simplerunner
+* @simplerunner@ <sup>f,s</sup>
+
+
+* Complexrunner
+* @complexrunner@ <sup>f,s</sup>
+
+
 * Strategy
 ** @strategy@ <sup>f,p</sup>
 

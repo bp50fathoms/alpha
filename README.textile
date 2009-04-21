@@ -21,7 +21,7 @@ When the façade is merely a list of imports and does not contain any real code,
 Since the code is thoroughly unit tested, most classes have their RSpec counterpart in the @spec/@ directory. When this is the case, files are labelled <sup>s</sup>.
 
 * Property: property abstraction
-** @property@ <sup>f, h</sup>
+** @property@ <sup>f,h</sup>
 ** @property_class@ <sup>s</sup>: _Property_ class definition (property namespace)
 ** @property_core@ <sup>s</sup>: _Property_ instances definition
 ** @property_ast@: AST for representing a simplified view of predicates
@@ -31,6 +31,12 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 ** @property_covertable@ <sup>s</sup>: _CoverTable_ stores property coverage
 ** @property_language@ <sup>s</sup>: DSL for defining properties
 ** @property_cases@ <sup>s</sup>
+
+
+* Contract
+** @contract@ <sup>f,h</sup>
+** @contract_core@ <sup>s</sup>
+** @contract_language@ <sup>s</sup>
 
 
 * Pipeline: pipeline abstraction, after the Pipes & Filters architectural pattern
@@ -59,10 +65,10 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 ** @cases@ <sup>s</sup>
 
 * Random
-* @random@ <sup>f,h</sup>
-* @random_combinators@ <sup>s</sup>
-* @random_string@ <sup>s</sup>
-* @random_strategy@ <sup>s</sup>
+** @random@ <sup>f,h</sup>
+** @random_combinators@ <sup>s</sup>
+** @random_string@ <sup>s</sup>
+** @random_strategy@ <sup>s</sup>
 
 
 * Exhaustive

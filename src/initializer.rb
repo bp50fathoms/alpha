@@ -44,7 +44,7 @@ end
 
 
 class Default
-  attrs(:name, :value)
+  attrs :name, :value
 
   def self.[](*ary)
     Default.new(ary[0], ary[1])

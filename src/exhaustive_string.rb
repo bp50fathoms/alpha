@@ -7,7 +7,7 @@ class String
   end
 
   class StringIterator
-    include Enumerable, Permutations
+    include Enumerable
 
     def initialize(n)
       @n = n
@@ -18,7 +18,7 @@ class String
       unless @n == 0
         head = lambda { |v,i| "for #{v} in r" }
         yld = lambda { |y| "yield(#{y})" }
-        eval(genc(@n, head, '+', yld), binding)
+        eval(Permutations.genc(@n, head, '+', yld), binding)
       else
         yield('')
       end

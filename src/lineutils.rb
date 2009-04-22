@@ -10,4 +10,6 @@ module LineUtils
     l = l + ' ' * (x - ll) if ll < x
     l
   end
+
+  module_function :divide, :full_wide
 end

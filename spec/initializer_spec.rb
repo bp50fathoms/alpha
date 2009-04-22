@@ -9,7 +9,6 @@ module InitializerSpec
 
   class FooBar < Bar
     attr_reader *initsuper_with([:c, :d], [:a, :b]) { @e = 8 }
-
     attr_reader :e
   end
 

@@ -36,14 +36,14 @@ module Exhaustive
 
 
   class Product
-    include Enumerable, Permutations
+    include Enumerable
 
     initialize_with :n, :ary
 
     def each(&block)
       head = lambda { |v,i| "@ary[#{i}].exhaustive(@n).each do |#{v}|" }
       yld = lambda { |y| "yield([#{y}])" }
-      eval(genc(@ary.size, head, ',', yld), binding)
+      eval(Permutations.genc(@ary.size, head, ',', yld), binding)
     end
   end
 

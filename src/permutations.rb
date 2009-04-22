@@ -15,4 +15,6 @@ module Permutations
     end
     command
   end
+
+  module_function :genc
 end

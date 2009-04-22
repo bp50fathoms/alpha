@@ -4,7 +4,7 @@ require 'thread'
 
 
 class ScrollPane
-  include Curses, LineUtils
+  include Curses
 
   def initialize
     @buffer = []
@@ -25,8 +25,8 @@ class ScrollPane
       lines.each_line do |line|
         r = line
         while !r.empty? do
-          l, r = divide(r, mlen)
-          @buffer[index + i] = full_wide(l, mlen)
+          l, r = LineUtils.divide(r, mlen)
+          @buffer[index + i] = LineUtils.full_wide(l, mlen)
           i += 1
         end
       end

@@ -6,23 +6,23 @@ module LineUtilsSpec
     include LineUtils
 
     describe 'divide' do
-      it 'should divide correctly when the word is larger than the word size' do
-        divide('12345', 3).should == ['123' ,'45']
+      it 'should split correctly when the word is larger than the word size' do
+        LineUtils.divide('12345', 3).should == ['123' ,'45']
       end
 
-      it 'should divide correctly when the word size is 1' do
+      it 'should split correctly when the word size is 1' do
         divide('1234', 1).should == ['1', '234']
       end
 
-      it 'should divide correctly when the word size is equal to the word' do
+      it 'should split correctly when the word size is equal to the word' do
         divide('1234567890', 10).should == ['1234567890', '']
       end
 
-      it 'should divide correctly when the word is smaller than the word size' do
+      it 'should split correctly when the word is smaller than the word size' do
         divide('12345', 6).should == ['12345', '']
       end
 
-      it 'should divide correctly the empty string' do
+      it 'should split correctly the empty string' do
         divide('', 0).should == ['', '']
         divide('', 1).should == ['', '']
       end
@@ -31,7 +31,7 @@ module LineUtilsSpec
 
     describe 'full_wide' do
       it 'should widen correctly a short string' do
-        full_wide('123', 4).should == '123 '
+        LineUtils.full_wide('123', 4).should == '123 '
       end
 
       it 'should keep a string as it is when it is wide enough' do

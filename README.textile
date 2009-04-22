@@ -26,8 +26,8 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 | @property@              | _    | |
 | @property_class@        | X    | |
 | @property_core@         | X    | |
-| @property_ast@          | _    | AST for representing a simplified view of predicates |
-| @property_rcollector@   | X    | ResultCollector, used for storing subexpression results of instrumented predicates |
+| @property_ast@          | _    | AST for representing the relevant parts of predicates |
+| @property_rcollector@   | X    | _ResultCollector_, used for storing subexpression results of instrumented predicates |
 | @property_pvisitor@     | X    | _PropertyVisitor_ instruments _Properties_ and builds a simplied AST |
 | @property_covervisitor@ | X    | _CoverVisitor_ computes property coverage goals |
 | @property_covertable@   | X    | _CoverTable_ stores property coverage information |

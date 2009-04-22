@@ -1,14 +1,28 @@
 h2. Requirements
 
+In order to run the prototype, the following dependencies need to be
+installed:
+
 * "Ruby 1.8":http://www.ruby-lang.org/
 * "Ruby Gems":http://www.rubygems.org/
 ** "ParseTree":http://github.com/seattlerb/parsetree/
 ** "rake":http://rake.rubyforge.org/ <sup><a href="#fn1">1</a></sup>
 ** "rcov":http://eigenclass.org/hiki/rcov/ <sup><a href="#fn1">1</a></sup>
 ** "rspec":http://www.rspec.info/ <sup><a href="#fn1">1</a></sup>
+** "ruby-graphviz":http://raa.ruby-lang.org/project/ruby-graphviz/ <sup><a href="#fn2">2</a></sup>
 ** "ruby2ruby":http://github.com/seattlerb/ruby2ruby/
+** "sqlite3-ruby":http://sqlite-ruby.rubyforge.org/sqlite3/
+* Binaries
+** "Graphviz":http://www.graphviz.org/ <sup><a href="#fn2">2</a></sup>
+** "SQLite3":http://www.sqlite.org/
+* Libraries
+** curses <sup><a href="#fn3">3</a></sup>
 
 fn1. are only necessary for executing the @rakefile@ which runs the unit tests and generates test and code coverage reports. Otherwise, the basic requirements are enough.
+
+fn2. Graphviz and its corresponding Gem is required for visualizing property coverage graphics.
+
+fn3. curses is needed for using the interactive text user interface. It is installed by default in all *nix operating systems, usually in its new implementation: "ncurses":http://www.gnu.org/software/ncurses/.
 
 h2. File Structure
 
@@ -17,6 +31,7 @@ Each item in the following list represents a component of the framework. Each el
 All components, except the Libraries, have a façade file in case they consist on several files. Just importing (@require@) the façade is sufficient for accessing all the logic implemented by the component. Façades are clearly labelled in the Description column. When a façade is merely a list of imports and does not contain any real code, it is just labelled as a header.
 
 Since the code is thoroughly unit tested, most classes have their RSpec counterpart in the @spec/@ directory. When this is the case, a cross appears on the Spec column. Some header files also have its RSpec counterpart, which may seem counterintuitive. This specs are not real tests, but helper files containing utility hooks for easing the task of testing other components which depend on the present one.
+
 
 * Property
 
@@ -31,19 +46,6 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 | @property_covertable@   | X    | _CoverTable_ stores property coverage information                         |
 | @property_language@     | X    | DSL for defining properties                                               |
 | @property_cases@        | X    | infrastructure for declaring test cases for each property                 |
-
-
-* Property: property abstraction
-** @property@ <sup>f,h</sup>
-** @property_class@ <sup>s</sup>: _Property_ class definition (property namespace)
-** @property_core@ <sup>s</sup>: _Property_ instances definition
-** @property_ast@: AST for representing a simplified view of predicates
-** @property_rcollector@ <sup>s</sup>: _ResultCollector_, used for storing subexpression results of instrumented predicates
-** @property_pvisitor@ <sup>s</sup>: _PropertyVisitor_ instruments _Properties_ and builds a simplied AST
-** @property_covervisitor@ <sup>s</sup>: _CoverVisitor_ computes property coverage goals
-** @property_covertable@ <sup>s</sup>: _CoverTable_ stores property coverage information
-** @property_language@ <sup>s</sup>: DSL for defining properties
-** @property_cases@ <sup>s</sup>
 
 
 * Contract

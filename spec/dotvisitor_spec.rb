@@ -84,5 +84,21 @@ module DOTVisitorSpec
 
       @p.call([-1, -2, -3] * 20, @r)
     end
+
+    it 'should deal correctly with contracts' do
+      class Foo
+        def bar(baz)
+          Math.sqrt(baz)
+        end
+
+        contract :bar => [Fixnum] do
+          requires { |n| n >= 0 }
+          ensures { |n,r| (r ** 2 - n).abs < 1e-5 }
+        end
+      end
+      @p = Property[:'DOTVisitorSpec::Foo.bar']
+      @p.call(Foo.new, -88, @r)
+      @p.call(Foo.new, 4, @r)
+    end
   end
 end

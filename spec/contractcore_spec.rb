@@ -35,7 +35,7 @@ module ContractSpec
       c.call(Foo.new, -1).should be_true
     end
 
-    it 'should build a complex contract' do
+    it 'should build a sandboxed contract' do
       c = Contract.new(METHOD, [Float]) do
         requires(&PRECONDITION)
         ensures(&POSTCONDITION)
@@ -49,7 +49,7 @@ module ContractSpec
       c.call(Foo.new, -1).should be_true
     end
 
-    it 'should build a complex contract of a method of arity 0' do
+    it 'should build a sandboxed contract of a method of arity 0' do
       method = Foo.instance_method(:foobar)
       c = Contract.new(method, []) do
         requires { true }

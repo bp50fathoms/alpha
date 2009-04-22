@@ -106,10 +106,11 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 ** @scrollpane@: text-mode interactive scroll pane UI component
 ** @visitor@ <sup>s</sup>: Visitor design pattern
 
-| @decorator@ | X | Decorator design pattern |
-| @initializer@ | X | simplified constructors through metaprogramming, à la CLOS |
-| @lineutils@ | X | line manipulation functions to fit text into screen size |
-| @permutations@ X | Lisp-like macro for generating permutations |
-| @progressbar@ | X | text-mode progress bar UI component |
-| @scrollpane@ | | text-mode interactive scroll pane UI component |
-| @visitor@ | X | Visitor design pattern |
+| File            | Spec | Description |
+| @decorator@     | X    | Decorator design pattern |
+| @initializer@   | X    | simplified constructors through metaprogramming, à la CLOS |
+| @lineutils@     | X    | line manipulation functions to fit text into screen size |
+| @permutations@  | X    | Lisp-like macro for generating permutations |
+| @progressbar@   | X    | text-mode progress bar UI component |
+| @scrollpane@    |      | text-mode interactive scroll pane UI component |
+| @visitor@       | X    | Visitor design pattern |

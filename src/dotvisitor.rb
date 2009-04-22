@@ -45,7 +45,7 @@ class DOTVisitor
   end
 
   def visit_boolatom(e)
-    add_node(e, 'atom')
+    add_node(e, trunc(e.code, 15))
   end
 
   private
@@ -80,6 +80,14 @@ class DOTVisitor
 
   def add_edge(parent, child)
     @graph.add_edge(key(parent), key(child))
+  end
+
+  def trunc(s, l)
+    if s.length > l
+      s[0..l-4] + '...'
+    else
+      s
+    end
   end
 
   include Visit

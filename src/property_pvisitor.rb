@@ -34,7 +34,7 @@ class PredicateVisitor
   end
 
   def visit_lvar(exp)
-    t = BoolAtom.new
+    t = BoolAtom.new(sexp_to_s(exp))
     s = instrument(s(:lvar, exp[1]), t)
     [s, t]
   end
@@ -76,7 +76,7 @@ class PredicateVisitor
       s = instrument(exp, t)
       [s, t]
     else
-      t = BoolAtom.new
+      t = BoolAtom.new(sexp_to_s(exp))
       s = instrument(exp, t)
       [s, t]
     end
@@ -96,7 +96,7 @@ class PredicateVisitor
       exp[3] = b
       [exp , a]
     else
-      t = BoolAtom.new
+      t = BoolAtom.new(sexp_to_s(exp))
       s = instrument(exp, t)
       [s, t]
     end
@@ -140,5 +140,9 @@ class PredicateVisitor
         s(:call, s(:const, :ObjectSpace), :_id2ref,
           s(:arglist, s(:lit, o.object_id))),
         expr))
+  end
+
+  def sexp_to_s(sexp)
+    Ruby2Ruby.new.process(Marshal.load(Marshal.dump(sexp)))
   end
 end

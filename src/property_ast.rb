@@ -2,36 +2,41 @@ require 'initializer'
 require 'visitor'
 
 
+def attrd(*params, &rest)
+  attr_reader *initialize_with(*params, &rest)
+end
+
 class UnaryExpr
   include Visitable
-  attrs(:operator, :expr)
+  attrd(:operator, :expr)
 end
 
 class BinaryExpr
   include Visitable
-  attrs(:left_expr, :operator, :right_expr)
+  attrd(:left_expr, :operator, :right_expr)
 end
 
 class QuantExpr
   include Visitable
-  attrs(:type, :expr)
+  attrd(:type, :expr)
 end
 
 class Conditional
   include Visitable
-  attrs(:condition, :then_branch, :else_branch)
+  attrd(:condition, :then_branch, :else_branch)
 end
 
 class Composition
   include Visitable
-  attrs(:property)
+  attrd(:property)
 end
 
 class BoolConst
   include Visitable
-  attrs(:value)
+  attrd(:value)
 end
 
 class BoolAtom
   include Visitable
+  attrd(:code)
 end

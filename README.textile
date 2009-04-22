@@ -121,4 +121,5 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 | @permutations@  | X    | Lisp-like macro for generating permutations                |
 | @progressbar@   | X    | text-mode progress bar UI component                        |
 | @scrollpane@    | _    | text-mode interactive scroll pane UI component             |
+| @unifiedarity@  | X    | provides a
 | @visitor@       | X    | Visitor design pattern                                     |

@@ -1,6 +1,3 @@
-require 'property'
-
-
 class Property
   attr_reader :cases
 

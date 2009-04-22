@@ -1,13 +1,10 @@
-require 'property'
-
-
 module Kernel
   def desc(doc)
     Property.next_desc = doc
   end
 
   def property(signature, &block)
-    Property.new(*Signature::dump_signature(signature), &block)
+    Property.new(*Signature.dump_signature(signature), &block)
   end
 end
 
@@ -34,25 +31,25 @@ module Signature
 end
 
 
-class TrueClass
-  def implies(conseq)
-    conseq
-  end
+# class TrueClass
+#   def implies(conseq)
+#     conseq
+#   end
 
-  def l_implies(&conseq)
-    raise ArgumentError, 'a consequent must be provided' unless conseq
-    conseq.call
-  end
-end
+#   def l_implies(&conseq)
+#     raise ArgumentError, 'a consequent must be provided' unless conseq
+#     conseq.call
+#   end
+# end
 
 
-class FalseClass
-  def implies(conseq)
-    true
-  end
+# class FalseClass
+#   def implies(conseq)
+#     true
+#   end
 
-  def l_implies(&conseq)
-    raise ArgumentError, 'a consequent must be provided' unless conseq
-    true
-  end
-end
+#   def l_implies(&conseq)
+#     raise ArgumentError, 'a consequent must be provided' unless conseq
+#     true
+#   end
+# end

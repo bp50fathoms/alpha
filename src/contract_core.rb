@@ -3,9 +3,12 @@ require 'rubygems'
 require 'parse_tree'
 require 'parse_tree_extensions'
 require 'ruby2ruby'
+require 'unifiedarity'
 
 
 class Contract < Property
+  include UnifiedArity
+
   attr_reader :method, :precondition, :postcondition
 
   def initialize(method, types, precondition = nil, postcondition = nil, &block)
@@ -50,7 +53,6 @@ class Contract < Property
 
 
   def check_arity(attr, element, exp_arity)
-    cond_arity = attr.arity != -1 ? attr.arity : 0
-    raise ArgumentError, "wrong #{element} arity" if cond_arity != exp_arity
+    raise ArgumentError, "wrong #{element} arity" if ar(attr) != exp_arity
   end
 end

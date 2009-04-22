@@ -1,13 +1,15 @@
-require 'property'
 require 'rubygems'
 require 'ruby2ruby'
 require 'parse_tree'
 require 'parse_tree_extensions'
+require 'singleton'
 
 
 class PredicateVisitor
+  include Singleton
+
   def self.accept(block)
-    sexp, tree = self.new.visit_body(block.to_sexp)
+    sexp, tree = self.instance.visit_body(block.to_sexp)
     ncode = Ruby2Ruby.new.process(sexp)
     newblock = block.binding.eval(ncode)
     [newblock, tree]
@@ -90,9 +92,6 @@ class PredicateVisitor
                        exp[2], b), t)
       [s, t]
     elsif exp[1][2] == :instance_exec
-      #require 'pp'
-      #pp exp
-      #pp exp[3]
       b, a = visit(exp[3])
       exp[3] = b
       [exp , a]

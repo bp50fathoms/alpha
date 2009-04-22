@@ -1,9 +1,10 @@
 require 'forwardable'
-require 'property'
+require 'unifiedarity'
 
 
 class Property
   extend Forwardable
+  include UnifiedArity
 
   attr_reader :cover_goal, :key, :tree, :types
 
@@ -15,7 +16,7 @@ class Property
     raise ArgumentError, 'a block must be provided' if block.nil?
     @key = key
     @types = types
-    if block.arity < -1 or block.arity > 0 or types.size == 0
+    if ar(block) > 0 or ar(block) < -1 or types.size == 0
       predicate(&block)
     else
       instance_eval(&block)
@@ -43,8 +44,8 @@ class Property
 
   def predicate=(expr)
     ts = types.size
-    raise ArgumentError, 'varargs are unsupported' if expr.arity < -1
-    arity = expr.arity != -1 ? expr.arity : 0
+    arity = ar(expr)
+    raise ArgumentError, 'varargs are unsupported' if arity < -1
     if ts != arity
       raise ArgumentError, "wrong number of types (#{ts} for #{arity})"
     end

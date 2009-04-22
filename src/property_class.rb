@@ -1,5 +1,4 @@
 require 'forwardable'
-require 'property'
 
 
 class Property
@@ -11,8 +10,6 @@ class Property
 
   def self.method_missing(name, *args)
     if properties.has_key?(name)
-      narg = args.size
-      arity = properties[name].arity
       properties[name].call(*args)
     else
       super

@@ -91,19 +91,6 @@ module PredicateVisitorSpec
         'end'
     end
 
-    it 'should process correctly lazy implication' # do
-    #   b, t = accept { |a,b| a.l_implies { b }
-    # end
-
-    it 'should process correctly non-lazy implication'#  do
-    #   b, t = accept { |a,b| a.implies b }
-    #   source(b).should ==
-    #     "proc do |a, b, _r|\n" +
-    #     "  _r.store(#{id(t)}, _r.store(#{id(t.left_expr)}, a)" +
-    #     ".implies(_r.store(#{id(t.right_expr)}, b)))\n" +
-    #     'end'
-    # end
-
     it 'should process correctly universal quantification' do
       b, t = accept { |a| a.all? { |e| e } }
       source(b).should ==
@@ -161,27 +148,6 @@ module PredicateVisitorSpec
         'end'
     end
 
-    # it 'should process correctly inequality' do
-    #   b, t = accept { |a,b| a != b }
-    #   source(b).should ==
-    #     "proc do |a, b, _r|\n" +
-    #     "  _r.store(#{id(t)}, (not _r.store(#{id(t.expr)}, " +
-    #     "(_r.store(#{id(t.expr.left_expr)}, a) " +
-    #     "== _r.store(#{id(t.expr.right_expr)}, b)))))\n" +
-    #     'end'
-    # end
-
-    # it 'should process correctly equality' do
-    #   b, t = accept { |a,b| a == b }
-    #   source(b).should ==
-    #     "proc do |a, b, _r|\n" +
-    #     "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, a) " +
-    #     "== _r.store(#{id(t.right_expr)}, b)))\n" +
-    #     'end'
-    # end
-
-    # big example 1
-
     def accept(&block)
       PredicateVisitor.accept(block)
     end
@@ -195,3 +161,39 @@ module PredicateVisitorSpec
     end
   end
 end
+
+
+# it 'should process correctly inequality' do
+#   b, t = accept { |a,b| a != b }
+#   source(b).should ==
+#     "proc do |a, b, _r|\n" +
+#     "  _r.store(#{id(t)}, (not _r.store(#{id(t.expr)}, " +
+#     "(_r.store(#{id(t.expr.left_expr)}, a) " +
+#     "== _r.store(#{id(t.expr.right_expr)}, b)))))\n" +
+#     'end'
+# end
+
+# it 'should process correctly equality' do
+#   b, t = accept { |a,b| a == b }
+#   source(b).should ==
+#     "proc do |a, b, _r|\n" +
+#     "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, a) " +
+#     "== _r.store(#{id(t.right_expr)}, b)))\n" +
+#     'end'
+# end
+
+# big example 1
+
+
+# it 'should process correctly lazy implication' # do
+#   b, t = accept { |a,b| a.l_implies { b }
+# end
+
+# it 'should process correctly non-lazy implication'#  do
+#   b, t = accept { |a,b| a.implies b }
+#   source(b).should ==
+#     "proc do |a, b, _r|\n" +
+#     "  _r.store(#{id(t)}, _r.store(#{id(t.left_expr)}, a)" +
+#     ".implies(_r.store(#{id(t.right_expr)}, b)))\n" +
+#     'end'
+# end

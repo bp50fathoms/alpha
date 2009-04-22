@@ -12,27 +12,25 @@ fn1. are only necessary for executing the @rakefile@ which runs the unit tests a
 
 h2. File Structure
 
-Each item at level 1 in the following list represents a component of the framework. Each item at level 2 indicates a source file containing part of the implementation of the corresponding component. Those files are stored in the @src/@ directory (see *Git Repository* for more information).
+Each item in the following list represents a component of the framework. Each element contained in the table provided once per component indicates a source file containing part of its implementation. Those files are stored in the @src/@ directory (see *Git Repository* for more information).
 
-All components, except the Libraries, have a façade file in case they consist on several files. Just importing (@require@) the façade is sufficient for accessing all the logic implemented by the component. Façades are labelled <sup>f</sup>.
+All components, except the Libraries, have a façade file in case they consist on several files. Just importing (@require@) the façade is sufficient for accessing all the logic implemented by the component. Façades are clearly labelled in the Description column. When a façade is merely a list of imports and does not contain any real code, it is just labelled as a header.
 
-When the façade is merely a list of imports and does not contain any real code, it is labelled <sup>h</sup>, after header files.
-
-Since the code is thoroughly unit tested, most classes have their RSpec counterpart in the @spec/@ directory. When this is the case, files are labelled <sup>s</sup>.
+Since the code is thoroughly unit tested, most classes have their RSpec counterpart in the @spec/@ directory. When this is the case, a cross appears on the Spec column. Some header files also have its RSpec counterpart, which may seem counterintuitive. This specs are not real tests, but helper files containing utility hooks for easing the task of testing other components which depend on the present one.
 
 * Property
 
-| File                    | Spec | Description |
-| @property@              | _    | |
-| @property_class@        | X    | |
-| @property_core@         | X    | |
-| @property_ast@          | _    | AST for representing the relevant parts of predicates |
-| @property_rcollector@   | X    | _ResultCollector_, used for storing subexpression results of instrumented predicates |
-| @property_pvisitor@     | X    | _PropertyVisitor_ instruments _Properties_ and builds a simplied AST |
-| @property_covervisitor@ | X    | _CoverVisitor_ computes property coverage goals |
-| @property_covertable@   | X    | _CoverTable_ stores property coverage information |
-| @property_language@     | X    | DSL for defining properties |
-| @property_cases@        | X    |  |
+| File                    | Spec | Description                                                               |
+| @property@              | X    | header                                                                    |
+| @property_class@        | X    | _Property_ class definition, mainly providing a namespace facility        |
+| @property_core@         | X    | _Property_ instances definition                                           |
+| @property_ast@          | _    | AST for representing the relevant parts of predicates                     |
+| @property_rcollector@   | X    | _ResultCollector_ stores subexpression results of instrumented predicates |
+| @property_pvisitor@     | X    | _PropertyVisitor_ instruments _Properties_ and builds a simplied AST      |
+| @property_covervisitor@ | X    | _CoverVisitor_ computes property coverage goals                           |
+| @property_covertable@   | X    | _CoverTable_ stores property coverage information                         |
+| @property_language@     | X    | DSL for defining properties                                               |
+| @property_cases@        | X    | infrastructure for declaring test cases for each property                 |
 
 
 * Property: property abstraction
@@ -121,5 +119,5 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 | @permutations@  | X    | Lisp-like macro for generating permutations                |
 | @progressbar@   | X    | text-mode progress bar UI component                        |
 | @scrollpane@    | _    | text-mode interactive scroll pane UI component             |
-| @unifiedarity@  | X    | provides a
+| @unifiedarity@  | X    | calculates correctly block arity, fixing a bug in Proc     |
 | @visitor@       | X    | Visitor design pattern                                     |

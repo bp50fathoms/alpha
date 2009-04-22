@@ -1,9 +1,11 @@
 class CoverTable
   attr_reader :table
 
-  def initialize(coverage_goal)
+  def initialize(property)
     @table = {}
-    coverage_goal.each_pair { |k,v| @table[k] = Hash[*v.map { |e| [e,0] }.flatten] }
+    property.cover_goal.each_pair do |k,v|
+      @table[k] = Hash[*v.map { |e| [e,0] }.flatten]
+    end
   end
 
   def add_result(rc)

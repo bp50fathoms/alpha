@@ -22,7 +22,7 @@ module DOTVisitorSpec
     after(:each) do
       g = GraphViz.new('g', :output => 'pdf', :file => "out/#{$n}.pdf")
       $n += 1
-      c = CoverTable.new(@p.cover_goal)
+      c = CoverTable.new(@p)
       c.add_result(@r)
       dp = P.new(@p, c)
       DOTVisitor.new(g, dp)

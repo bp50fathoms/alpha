@@ -5,7 +5,7 @@ module CoverTableSpec
   describe CoverTable do
     shared_examples_for 'CoverTable' do
       before(:each) do
-        @ct = CoverTable.new(coverage_goal)
+        @ct = CoverTable.new(stub('Property', :cover_goal => coverage_goal))
       end
 
       after(:each) do

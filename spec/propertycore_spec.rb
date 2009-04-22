@@ -52,7 +52,7 @@ module PropertyCoreSpec
       p.call('a', r1)
       r2 = ResultCollector.new
       p.call('', r2)
-      c = CoverTable.new(p.cover_goal)
+      c = CoverTable.new(p)
       c.add_result(r1)
       c.add_result(r2)
       t = p.tree

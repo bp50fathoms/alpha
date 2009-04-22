@@ -71,7 +71,7 @@ module ContractSpec
       c.call(Foo.new, 4, r1)
       r2 = ResultCollector.new
       c.call(Foo.new, -1, r2)
-      ct = CoverTable.new(c.cover_goal)
+      ct = CoverTable.new(c)
       ct.add_result(r1)
       ct.add_result(r2)
       t = c.tree

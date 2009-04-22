@@ -62,6 +62,32 @@ module PropertyCoreSpec
         t.else_branch => { true => 1 } }
     end
 
+    it 'should reject extreme varargs blocks that are incorrect in Proc' do
+      lambda do
+        p = property :p do |*a|
+          true
+        end
+      end.should raise_error(ArgumentError)
+    end
+
+    it 'should reject being called with less than 1 arg minus its arity' do
+      p = property :p => [String] do |a|
+        a.length > 0
+      end
+      p.call('a').should be_true
+      p.call('abc', ResultCollector.new).should be_true
+      lambda { p.call }.should raise_error(ArgumentError)
+    end
+
+    it 'should reject being called with args different than arity in case its
+    degenerated' do
+      p = property :p do
+        true
+      end
+      p.call
+      lambda { p.call(1) }.should raise_error(ArgumentError)
+    end
+
     it 'should reject a property with non-Symbol values as keys' do
       lambda { Property.new(1, []) { } }.should raise_error(ArgumentError)
       lambda do

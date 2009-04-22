@@ -16,11 +16,11 @@ class Property
     raise ArgumentError, 'a block must be provided' if block.nil?
     @key = key
     @types = types
-    if ar(block) > 0 or ar(block) < -1 or types.size == 0
-      predicate(&block)
-    else
+    if ar(block) == 0 and types.size != 0
       instance_eval(&block)
       raise ArgumentError, 'predicate should be defined' if predicate.nil?
+    else
+      predicate(&block)
     end
     self.class[key] = self
   end
@@ -36,6 +36,8 @@ class Property
   def call(*args)
     if arity > 0 and args.length < predicate.arity
       args << ResultCollector.new
+    elsif arity == 0 and args.length != 0
+      raise ArgumentError, 'wrong number of arguments #{args.length} for 0'
     end
     predicate.call(*args)
   end
@@ -44,12 +46,12 @@ class Property
 
   def predicate=(expr)
     ts = types.size
-    arity = ar(expr)
-    raise ArgumentError, 'varargs are unsupported' if arity < -1
-    if ts != arity
-      raise ArgumentError, "wrong number of types (#{ts} for #{arity})"
+    aty = ar(expr)
+    raise ArgumentError, 'varargs are unsupported' if aty < -1
+    if ts != aty
+      raise ArgumentError, "wrong number of types (#{ts} for #{aty})"
     end
-    if arity == 0
+    if aty == 0
       @predicate = expr
     else
       @predicate, @tree = PredicateVisitor.accept(expr)

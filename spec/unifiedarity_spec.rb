@@ -18,6 +18,7 @@ module UnifiedAritySpec
     end
 
     it 'should compute correctly the arity of blocks with varargs' do
+      ar(lambda { |*a| }).should == -1
       ar(lambda { |a,*b| }).should == -2
     end
   end

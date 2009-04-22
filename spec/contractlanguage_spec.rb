@@ -15,8 +15,8 @@ module ContractLanguageSpec
     it 'should build a contract with => notation' do
       class Foo
         contract :bar => [Float] do
-          requires { |e| }
-          ensures { |e,r| }
+          requires { |e| e > 0 }
+          ensures { |e,r| e == r }
         end
       end
       c = Property[:'ContractLanguageSpec::Foo.bar']
@@ -26,8 +26,8 @@ module ContractLanguageSpec
     it 'should build a contract for a method of arity 0' do
       class Foo
         contract :foobar do
-          requires {}
-          ensures { |r| }
+          requires { true }
+          ensures { |r| true }
         end
       end
       c = Property[:'ContractLanguageSpec::Foo.foobar']
@@ -37,8 +37,8 @@ module ContractLanguageSpec
     it 'should build a contract with => notation and without Array' do
       class Foo
         contract :bar => Float do
-          requires { |e| }
-          ensures { |e,r| }
+          requires { |e| true }
+          ensures { |e,r| true }
         end
       end
       c = Property[:'ContractLanguageSpec::Foo.bar']
@@ -49,8 +49,8 @@ module ContractLanguageSpec
       lambda do
         class Foo
           contract :foo do
-            requires { |e| }
-            ensures { |e,r| }
+            requires { |e| true }
+            ensures { |e,r| true }
           end
         end
       end.should raise_error(Exception)
@@ -60,8 +60,8 @@ module ContractLanguageSpec
       lambda do
         class Foo
           contract :bar => Float, :baz => [Float] do
-            requires { |e| }
-            ensures { |e,r| }
+            requires { |e| true }
+            ensures { |e,r| true }
           end
         end
       end.should raise_error(ArgumentError)

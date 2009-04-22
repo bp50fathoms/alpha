@@ -58,6 +58,15 @@ module CoverVisitorSpec
                     t2.left_expr => [true, false], t2.right_expr => [true, false] }
     end
 
+    it 'should compute a correct coverage goal for a property with instance_exec' do
+      p = property :p => [String] do |x|
+        a.instance_exec { @length == x.length }
+      end
+      t = p.tree
+      g = p.cover_goal
+      g.should == { t => [true] }
+    end
+
     it 'should reject composition with undefined properties' do
       lambda do
         p = property :p => [String] do |x|

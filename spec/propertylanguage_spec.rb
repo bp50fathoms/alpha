@@ -59,6 +59,14 @@ module PropertyLanguageSpec
     it 'true => false = false' do
       (true.implies false).should be_false
     end
+
+    it 'true => true = true (lazy)' do
+      (true.l_implies { true }).should be_true
+    end
+
+    it 'true => false = false (lazy)' do
+      (true.l_implies { false }).should be_false
+    end
   end
 
 
@@ -69,6 +77,10 @@ module PropertyLanguageSpec
 
     it 'false => false = true' do
       (false.implies false).should be_true
+    end
+
+    it 'false => x = true (lazy)' do
+      (false.l_implies { fgh() }).should be_true
     end
   end
 end

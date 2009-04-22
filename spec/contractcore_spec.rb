@@ -65,7 +65,20 @@ module ContractSpec
       c.call(Foo.new, -1, ResultCollector.new).should be_true
     end
 
-    it 'should have instrumentation facilities working correctly'
+    it 'should have instrumentation facilities working correctly' do
+      c = contract
+      r1 = ResultCollector.new
+      c.call(Foo.new, 4, r1)
+      r2 = ResultCollector.new
+      c.call(Foo.new, -1, r2)
+      ct = CoverTable.new(c.cover_goal)
+      ct.add_result(r1)
+      ct.add_result(r2)
+      t = c.tree
+      ct.table.should == { t => { true => 2 },
+        t.condition => { true => 1, false => 1 },
+        t.then_branch => { true => 1 } }
+    end
 
     it 'should reject a contract with mismatching type length' do
       lambda do

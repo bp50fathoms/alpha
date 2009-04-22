@@ -36,13 +36,23 @@ end
 
 class TrueClass
   def implies(conseq)
-    !(conseq.nil? or conseq == false)
+    conseq
+  end
+
+  def l_implies(&conseq)
+    raise ArgumentError, 'a consequent must be provided' unless conseq
+    conseq.call
   end
 end
 
 
 class FalseClass
   def implies(conseq)
+    true
+  end
+
+  def l_implies(&conseq)
+    raise ArgumentError, 'a consequent must be provided' unless conseq
     true
   end
 end

@@ -91,6 +91,19 @@ module PredicateVisitorSpec
         'end'
     end
 
+    it 'should process correctly lazy implication' # do
+    #   b, t = accept { |a,b| a.l_implies { b }
+    # end
+
+    it 'should process correctly non-lazy implication'#  do
+    #   b, t = accept { |a,b| a.implies b }
+    #   source(b).should ==
+    #     "proc do |a, b, _r|\n" +
+    #     "  _r.store(#{id(t)}, _r.store(#{id(t.left_expr)}, a)" +
+    #     ".implies(_r.store(#{id(t.right_expr)}, b)))\n" +
+    #     'end'
+    # end
+
     it 'should process correctly universal quantification' do
       b, t = accept { |a| a.all? { |e| e } }
       source(b).should ==
@@ -126,6 +139,16 @@ module PredicateVisitorSpec
         "proc do |a, _r|\n" +
         "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, f(a)) " +
         "and _r.store(#{id(t.right_expr)}, Property.b(a, _r))))\n" +
+        'end'
+    end
+
+    it 'should process correctly instance_exec' do
+      b, t = accept { |a| a.instance_exec(1,2) { |c,d| @a > (c + d) } }
+      source(b).should ==
+        "proc do |a, _r|\n" +
+        "  a.instance_exec(1, 2) do |c, d|\n" +
+        "    _r.store(#{id(t)}, (@a > (c + d)))\n" +
+        "  end\n" +
         'end'
     end
 

@@ -61,10 +61,10 @@ class PredicateVisitor
   end
 
   def visit_call(exp)
-    if [:&, :|].include?(exp[2])
+    if [:&, :|, :implies].include?(exp[2])
       b1, a1 = visit(exp[1])
       b2, a2 = visit(exp[3][1])
-      op = { :& => :and, :| => :or, :== => :eql }
+      op = { :& => :and, :| => :or, :implies => :implies }
       t = BinaryExpr.new(a1, op[exp[2]], a2)
       s = instrument(s(:call, b1, exp[2], s(:arglist, b2)), t)
       [s, t]
@@ -89,6 +89,13 @@ class PredicateVisitor
                        s(:call, exp[1][1], exp[1][2], exp[1][3]),
                        exp[2], b), t)
       [s, t]
+    elsif exp[1][2] == :instance_exec
+      #require 'pp'
+      #pp exp
+      #pp exp[3]
+      b, a = visit(exp[3])
+      exp[3] = b
+      [exp , a]
     else
       t = BoolAtom.new
       s = instrument(exp, t)

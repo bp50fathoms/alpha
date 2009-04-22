@@ -20,6 +20,21 @@ When the façade is merely a list of imports and does not contain any real code,
 
 Since the code is thoroughly unit tested, most classes have their RSpec counterpart in the @spec/@ directory. When this is the case, files are labelled <sup>s</sup>.
 
+* Property
+
+| File                    | Spec | Description |
+| @property@              | _    |
+| @property_class@        | X    |
+| @property_core@         | X    |
+| @property_ast@          | _    | AST for representing a simplified view of predicates
+| @property_rcollector@   | X    | _ResultCollector_, used for storing subexpression results of instrumented predicates
+| @property_pvisitor@     | X    | _PropertyVisitor_ instruments _Properties_ and builds a simplied AST
+| @property_covervisitor@ | X    | <sup>s</sup>: _CoverVisitor_ computes property coverage goals
+| @property_covertable@   | X    | <sup>s</sup>: _CoverTable_ stores property coverage information
+| @property_language@     | X    | <sup>s</sup>: DSL for defining properties
+| @property_cases@        | X    |   <sup>s</sup>
+
+
 * Property: property abstraction
 ** @property@ <sup>f,h</sup>
 ** @property_class@ <sup>s</sup>: _Property_ class definition (property namespace)
@@ -98,13 +113,6 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 
 
 * Libraries
-** @decorator@ <sup>s</sup>: Decorator design pattern
-** @initializer@ <sup>s</sup>: simplified constructors through metaprogramming, à la CLOS
-** @lineutils@ <sup>s</sup>: line manipulation functions to fit text into screen size
-** @permutations@ <sup>s</sup>: Lisp-like macro for generating permutations
-** @progressbar@ <sup>s</sup>: text-mode progress bar UI component
-** @scrollpane@: text-mode interactive scroll pane UI component
-** @visitor@ <sup>s</sup>: Visitor design pattern
 
 | File            | Spec | Description |
 | @decorator@     | X    | Decorator design pattern |

@@ -23,7 +23,7 @@ module PropertyCoreSpec
       p.call('aa').should be_true
     end
 
-    it 'should accept a property with arity 0' do
+    it 'should accept a degenerate property (with arity 0)' do
       p = Property.new(:p, []) do
         1 > 0
       end

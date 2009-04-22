@@ -23,16 +23,16 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 * Property
 
 | File                    | Spec | Description |
-| @property@              | _    |
-| @property_class@        | X    |
-| @property_core@         | X    |
-| @property_ast@          | _    | AST for representing a simplified view of predicates
-| @property_rcollector@   | X    | _ResultCollector_, used for storing subexpression results of instrumented predicates
-| @property_pvisitor@     | X    | _PropertyVisitor_ instruments _Properties_ and builds a simplied AST
-| @property_covervisitor@ | X    | <sup>s</sup>: _CoverVisitor_ computes property coverage goals
-| @property_covertable@   | X    | <sup>s</sup>: _CoverTable_ stores property coverage information
-| @property_language@     | X    | <sup>s</sup>: DSL for defining properties
-| @property_cases@        | X    |   <sup>s</sup>
+| @property@              | _    | |
+| @property_class@        | X    | |
+| @property_core@         | X    | |
+| @property_ast@          | _    | AST for representing a simplified view of predicates |
+| @property_rcollector@   | X    | ResultCollector, used for storing subexpression results of instrumented predicates |
+| @property_pvisitor@     | X    | _PropertyVisitor_ instruments _Properties_ and builds a simplied AST |
+| @property_covervisitor@ | X    | _CoverVisitor_ computes property coverage goals |
+| @property_covertable@   | X    | _CoverTable_ stores property coverage information |
+| @property_language@     | X    | DSL for defining properties |
+| @property_cases@        | X    |  |
 
 
 * Property: property abstraction
@@ -114,11 +114,11 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 
 * Libraries
 
-| File            | Spec | Description |
-| @decorator@     | X    | Decorator design pattern |
+| File            | Spec | Description                                                |
+| @decorator@     | X    | Decorator design pattern                                   |
 | @initializer@   | X    | simplified constructors through metaprogramming, à la CLOS |
-| @lineutils@     | X    | line manipulation functions to fit text into screen size |
-| @permutations@  | X    | Lisp-like macro for generating permutations |
-| @progressbar@   | X    | text-mode progress bar UI component |
-| @scrollpane@    | _    | text-mode interactive scroll pane UI component |
-| @visitor@       | X    | Visitor design pattern |
+| @lineutils@     | X    | line manipulation functions to fit text into screen size   |
+| @permutations@  | X    | Lisp-like macro for generating permutations                |
+| @progressbar@   | X    | text-mode progress bar UI component                        |
+| @scrollpane@    | _    | text-mode interactive scroll pane UI component             |
+| @visitor@       | X    | Visitor design pattern                                     |

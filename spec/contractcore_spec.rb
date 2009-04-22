@@ -17,54 +17,66 @@ module ContractSpec
 
     METHOD = Foo.instance_method(:bar)
 
+    PRECONDITION = lambda { |n| n >= 0 }
+    POSTCONDITION = lambda { |n,r| (r ** 2 - n).abs < 1e-5 }
+
+    def contract
+      Contract.new(METHOD, [Float], PRECONDITION, POSTCONDITION)
+    end
+
     it 'should build a simple contract' do
-      precondition = lambda { |n| n >= 0 }
-      postcondition = lambda { |n,r| (r ** 2 - n).abs < 1e-5 }
-      c = Contract.new(METHOD, [Float], precondition, postcondition)
+      c = contract
       c.key.should == :'ContractSpec::Foo.bar'
       c.types.should == [ContractSpec::Foo, Float]
       c.method.should == METHOD
-      c.precondition.should == precondition
-      c.postcondition.should == postcondition
-      c.call(Foo.new, 1).should be_true
+      c.precondition.should == PRECONDITION
+      c.postcondition.should == POSTCONDITION
+      c.call(Foo.new, 9).should be_true
       c.call(Foo.new, -1).should be_true
     end
 
     it 'should build a complex contract' do
-      precondition = lambda { |n| n >= 0 }
-      postcondition = lambda { |n,r| (r ** 2 - n).abs < 1e-5 }
       c = Contract.new(METHOD, [Float]) do
-        requires(&precondition)
-        ensures(&postcondition)
+        requires(&PRECONDITION)
+        ensures(&POSTCONDITION)
       end
       c.key.should == :'ContractSpec::Foo.bar'
       c.types.should == [ContractSpec::Foo, Float]
       c.method.should == METHOD
-      c.precondition.should == precondition
-      c.postcondition.should == postcondition
+      c.precondition.should == PRECONDITION
+      c.postcondition.should == POSTCONDITION
+      c.call(Foo.new, 5).should be_true
+      c.call(Foo.new, -1).should be_true
     end
 
     it 'should build a complex contract of a method of arity 0' do
       method = Foo.instance_method(:foobar)
       c = Contract.new(method, []) do
-        requires { }
+        requires { true }
         ensures { |r| r == nil }
       end
+      c.call(Foo.new).should be_true
+      c.call(Foo.new).should be_true
     end
 
+    it 'should accept a ResultCollector explicitly as parameter' do
+      c = contract
+      c.call(Foo.new, 4, ResultCollector.new).should be_true
+      c.call(Foo.new, -1, ResultCollector.new).should be_true
+    end
+
+    it 'should have instrumentation facilities working correctly'
+
     it 'should reject a contract with mismatching type length' do
-      precondition = lambda { |n| n >= 0 }
-      postcondition = lambda { |n,r| (r ** 2 - n).abs < 1e-5 }
       lambda do
-        Contract.new(METHOD, [], precondition, postcondition)
+        Contract.new(METHOD, [], PRECONDITION, POSTCONDITION)
       end.should raise_error(ArgumentError)
     end
 
     it 'should reject a precondition with mismatching arity' do
-      precondition = lambda { |n,r| }
-      postcondition = lambda { |n,r| (r ** 2 - n).abs < 1e-5 }
+      precondition = lambda { |n,r| true }
       lambda do
-        Contract.new(METHOD, [Float], precondition, postcondition)
+        Contract.new(METHOD, [Float], precondition, POSTCONDITION)
       end.should raise_error(ArgumentError)
     end
 
@@ -80,18 +92,16 @@ module ContractSpec
     end
 
     it 'should reject a contract without precondition' do
-      postcondition = lambda { |n,r| (r ** 2 - n).abs < 1e-5 }
       lambda do
         Contract.new(METHOD, [Float]) do
-          ensures(&postcondition)
+          ensures(&POSTCONDITION)
         end
       end.should raise_error(Exception)
     end
 
     it 'should reject a contract without postcondition' do
-      precondition = lambda { |n,r| n >= 0 }
       lambda do
-        Contract.new(METHOD, [], precondition)
+        Contract.new(METHOD, [], PRECONDITION)
       end.should raise_error(ArgumentError)
     end
   end

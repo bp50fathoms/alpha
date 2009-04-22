@@ -40,6 +40,28 @@ module PropertyCoreSpec
       p.call('a', 'b', ResultCollector.new).should be_false
     end
 
+    it 'should have instrumentation facilities working correctly' do
+      p = property :p => [String] do |a|
+        if a.length > 0
+          a.length > 0
+        else
+          a.length == 0
+        end
+      end
+      r1 = ResultCollector.new
+      p.call('a', r1)
+      r2 = ResultCollector.new
+      p.call('', r2)
+      c = CoverTable.new(p.cover_goal)
+      c.add_result(r1)
+      c.add_result(r2)
+      t = p.tree
+      c.table.should == { t => { true => 2 },
+        t.condition => { true => 1, false => 1 },
+        t.then_branch => { true => 1 },
+        t.else_branch => { true => 1 } }
+    end
+
     it 'should reject a property with non-Symbol values as keys' do
       lambda { Property.new(1, []) { } }.should raise_error(ArgumentError)
       lambda do

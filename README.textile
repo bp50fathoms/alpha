@@ -112,5 +112,5 @@ Since the code is thoroughly unit tested, most classes have their RSpec counterp
 | @lineutils@     | X    | line manipulation functions to fit text into screen size |
 | @permutations@  | X    | Lisp-like macro for generating permutations |
 | @progressbar@   | X    | text-mode progress bar UI component |
-| @scrollpane@    |      | text-mode interactive scroll pane UI component |
+| @scrollpane@    | _    | text-mode interactive scroll pane UI component |
 | @visitor@       | X    | Visitor design pattern |

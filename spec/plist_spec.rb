@@ -1,4 +1,4 @@
-require 'plist'
+require 'pipeline'
 require 'property_helpers'
 
 

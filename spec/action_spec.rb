@@ -1,4 +1,4 @@
-require 'action'
+require 'pipeline'
 
 
 module ActionSpec

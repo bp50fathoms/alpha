@@ -1,4 +1,4 @@
-require 'pdecorator'
+require 'pipeline'
 require 'property_helpers'
 
 

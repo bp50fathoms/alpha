@@ -1,7 +1,7 @@
 require 'pipeline'
 
 
-module PipelineSpec
+module PipesSpec
   class Initial
     include PipelineElement
 

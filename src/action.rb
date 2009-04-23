@@ -1,6 +1,5 @@
 require 'forwardable'
 require 'initializer'
-require 'pipeline'
 
 
 module Action

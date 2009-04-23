@@ -28,5 +28,13 @@ module PropertyDecoratorSpec
       p.falsifying_case = 'a'
       p.falsified?.should be_true
     end
+
+    it 'should not add a cover table to properties of arity 0' do
+      a = property :a do
+        true
+      end
+      p = PropertyDecorator.new(a)
+      p.cover_table.should be_nil
+    end
   end
 end

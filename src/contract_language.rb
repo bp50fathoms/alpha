@@ -1,6 +1,3 @@
-require 'contract'
-
-
 class Class
   def contract(signature, &block)
     signature = Signature::dump_signature(signature)

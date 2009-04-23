@@ -1,4 +1,3 @@
-require 'contract'
 require 'rubygems'
 require 'parse_tree'
 require 'parse_tree_extensions'

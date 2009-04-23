@@ -4,6 +4,8 @@ require 'property_helpers'
 
 
 module ErrorDatabaseSpec
+  include SQLite3
+
   describe ErrorDatabase do
     it_should_behave_like 'Property'
 
@@ -87,11 +89,9 @@ module ErrorDatabaseSpec
     it 'should return the failing cases ordered correctly and unmarshalled' do
       p = property :p1 => [Fixnum, String] do |a,b| true end
       c1 = [123, 'abc']
-      m1 = Marshal.dump(c1)
-      @db.driver.execute("INSERT INTO error VALUES ('p1', '#{m1}', 0.5)")
+      insert('p1', c1, 0.5)
       c2 = [245, 'cde']
-      m2 = Marshal.dump(c2)
-      @db.driver.execute("INSERT INTO error VALUES ('p1', '#{m2}', 1)")
+      insert('p1', c2, 1)
       @db.get_cases(p).should == [c2, c1]
     end
 
@@ -99,6 +99,11 @@ module ErrorDatabaseSpec
       begin
         FileUtils::rm(DB_FILE)
       rescue Errno::ENOENT; end
+    end
+
+    def insert(prop, tcase, pb)
+      @db.driver.execute('INSERT INTO error VALUES (?, ?, ?)', prop,
+                         Blob.new(Marshal.dump(tcase)), pb)
     end
 
     def select_ord

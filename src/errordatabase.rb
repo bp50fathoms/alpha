@@ -44,7 +44,7 @@ class ErrorDatabase
   end
 
   def get_cases(property)
-    @driver.execute("SELECT tcase FROM error WHERE property = ? " +
+    @driver.execute('SELECT tcase FROM error WHERE property = ? ' +
                     'ORDER BY probability DESC', property.key).map do |e|
       Marshal.load(e.first)
     end
@@ -70,8 +70,9 @@ SQL
   end
 
   def insert(property, tcase, prob)
-   @driver.execute("INSERT INTO error(property, tcase, probability) VALUES (?, ?, ?)",
-                   property.key, Blob.new(dump(tcase)), prob)
+    @ins ||= @driver.prepare('INSERT INTO error(property, tcase, probability) ' +
+                             'VALUES (?, ?, ?)')
+    @ins.execute(property.key, Blob.new(dump(tcase)), prob)
   end
 
   def update(property, tcase, prob)
@@ -79,14 +80,14 @@ SQL
   end
 
   def update_dump(property, tcase, prob)
-     @driver.execute("UPDATE error SET probability = ? WHERE " +
-                    "property = ? and tcase = ?", prob, property.key,
-                    Blob.new(tcase))
+    @upd ||= @driver.prepare('UPDATE error SET probability = ? WHERE ' +
+                             'property = ? and tcase = ?')
+    @upd.execute(prob, property.key, Blob.new(tcase))
   end
 
   def count_error(property, tcase)
-    @driver.get_first_row("SELECT COUNT(*) FROM error WHERE " +
-                        "property = ? and tcase = ?", property.key,
+    @driver.get_first_row('SELECT COUNT(*) FROM error WHERE ' +
+                        'property = ? and tcase = ?', property.key,
                           Blob.new(dump(tcase))).first.to_i
   end
 

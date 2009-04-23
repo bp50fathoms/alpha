@@ -9,7 +9,7 @@ class PList < Array
   end
 
   def self.all
-    self.new(Property.values)
+    self.new(Property.values.sort { |a,b| a.key.to_s <=> b.key.to_s })
   end
 
   def initialize(enum)

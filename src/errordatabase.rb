@@ -22,7 +22,7 @@ class ErrorDatabase
     k = property.key.to_s
     m = Marshal.dump(tcase)
     where = "WHERE property='#{k}' and tcase='#{m}'"
-      c = @driver.get_first_row("SELECT COUNT(*) FROM error #{where}").first.to_i
+    c = @driver.get_first_row("SELECT COUNT(*) FROM error #{where}").first.to_i
     if c == 0
       @driver.execute("INSERT INTO error VALUES ('#{k}', '#{m}', 1)")
     else

@@ -21,7 +21,7 @@ class ComplexRunner < SequentialRunner
       failed = false
       @time = Time.new
       while @strategies.any? { |s| !s.exhausted? } and !failed and
-          (Time.new - @time < 20)
+          (Time.new - @time < 5)
         sts = @strategies.select { |s| !s.exhausted? }
         sts.each do |s|
           g = s.generate

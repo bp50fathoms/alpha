@@ -27,8 +27,7 @@ class ErrorDatabase
     else
       # p = @driver.get_first_row("SELECT probability FROM error #{where}").first
       p = probability(property, tcase)
-      p = alpha + (1 - alpha ) * p
-      update(property, tcase, p)
+      update(property, tcase, alpha + (1 - alpha) * p)
     end
     update_property(property, tcase)
   end
@@ -37,13 +36,9 @@ class ErrorDatabase
     e = dump(error)
     @driver.execute("SELECT * FROM error WHERE property='#{property.key}'") do |e|
       if @suc.include?(e[1])
-        h = 0
-        p = alpha * h + (1 - alpha) * e[2]
-        update_dump(property, e[1], p)
+        update_dump(property, e[1], new_prob(0, e[2]))
       elsif e[1] != e
-        h = 1
-        p = alpha * h + (1 - alpha) * e[2]
-        update_dump(property, e[1], p)
+        update_dump(property, e[1], new_prob(1, e[2]))
       end
     end
     @suc = Set[]
@@ -55,6 +50,10 @@ class ErrorDatabase
   end
 
   private
+
+  def new_prob(h, old_prob)
+    alpha * h + (1 - alpha) * old_prob
+  end
 
   def create_schema
     sql =
@@ -71,7 +70,7 @@ SQL
 
   def insert(property, tcase, prob)
     @driver.execute("INSERT INTO error VALUES ('#{property.key}', '#{dump(tcase)}', #{prob})")
-    # @driver.execute('INSERT INTO error VALUES (?, ?, ?)', property.key.to_s,
+    # @driver.execute("INSERT INTO error VALUES (?, ?, ?)", property.key,
      #               Blob.new(dump(tcase)), prob)
   end
 

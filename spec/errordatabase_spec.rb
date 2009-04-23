@@ -86,6 +86,22 @@ module ErrorDatabaseSpec
       select_ord.should == [['p1', ['b'], 0.76], ['p2', ['c', 'd'], 1.0]]
     end
 
+    it 'should deal correctly with more than one error per property' do
+      p1 = property :p1 => [String] do |a| a.length == 0 end
+      p2 = property :p2 => [String, String] do |a,b| a == b end
+      @db.insert_success(p1, ['a'])
+      @db.update_property(p1)
+      @db.insert_success(p1, ['b'])
+      @db.insert_error(p1, ['a'])
+      @db.insert_success(p1, ['a'])
+      @db.insert_error(p1, ['b'])
+      @db.update_property(p1)
+      @db.insert_success(p1, ['a'])
+      @db.insert_success(p1, ['b'])
+      @db.update_property(p1)
+      select_ord.to_set.should == [['p1', ['b'], 0.4], ['p1', ['a'], 0.304]].to_set
+    end
+
     it 'should return the failing cases ordered correctly and unmarshalled' do
       p = property :p1 => [Fixnum, String] do |a,b| true end
       c1 = [123, 'abc']
@@ -93,6 +109,13 @@ module ErrorDatabaseSpec
       c2 = [245, 'cde']
       insert('p1', c2, 1)
       @db.get_cases(p).should == [c2, c1]
+    end
+
+    it 'should not crash with blobs containing null sequences' do
+      p = property :p1 => [String] do |a| true end
+      tc = ['']
+      Marshal.dump(tc).match('\000').should_not be_nil
+      @db.insert_error(p, tc)
     end
 
     def delete_file
@@ -107,7 +130,7 @@ module ErrorDatabaseSpec
     end
 
     def select_ord
-      @db.driver.execute("SELECT * FROM error ORDER BY property").map do |e|
+      @db.driver.execute('SELECT * FROM error ORDER BY property').map do |e|
         e[1] = Marshal.load(e[1])
         e
       end

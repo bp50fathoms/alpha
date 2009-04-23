@@ -11,7 +11,7 @@ class PropertyDecorator
 
   def initialize(property)
     @property = property
-    @cover_table = CoverTable.new(property)
+    @cover_table = CoverTable.new(property) if property.arity > 0
     @falsifying_case = nil
   end
 

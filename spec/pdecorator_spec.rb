@@ -1,8 +1,11 @@
 require 'pdecorator'
+require 'property_helpers'
 
 
 module PropertyDecoratorSpec
   describe PropertyDecorator do
+    it_should_behave_like 'Property'
+
     def prop
       property :p => [String] do |a|
         a.length >= 0

@@ -9,6 +9,8 @@ class PropertyDecorator
 
   attr_accessor :falsifying_case
 
+  alias :decorated :property
+
   def initialize(property)
     @property = property
     @cover_table = CoverTable.new(property) if property.arity > 0

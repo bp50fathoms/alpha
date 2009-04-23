@@ -12,6 +12,11 @@ module PropertyDecoratorSpec
       end
     end
 
+    it 'should be a decorator of property' do
+      p = PropertyDecorator.new(prop)
+      p.arity.should == 1
+    end
+
     it 'should report that it is not falsified when there is no falsifying case' do
       p = PropertyDecorator.new(prop)
       p.falsifying_case.should be_nil

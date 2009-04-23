@@ -27,6 +27,11 @@ class PList < Array
     super(m)
   end
 
+  def select(&block)
+    s = super
+    s.to_plist
+  end
+
   def output
     self
   end

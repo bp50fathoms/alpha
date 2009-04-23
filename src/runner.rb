@@ -1,5 +1,8 @@
 require 'observer'
 require 'pipeline'
+require 'pdecorator'
+require 'plist'
+require 'property'
 require 'ui'
 
 
@@ -8,8 +11,9 @@ class Runner
 
   def process(i)
     add_observer(UI.new(self)) if count_observers == 0
-    notify_properties(i)
-    check(i)
+    to_check = i.select { |p| !p.falsified? }
+    notify_properties(to_check)
+    check(to_check)
   end
 
   private
@@ -57,16 +61,22 @@ class SequentialRunner < Runner
 
   def eval_property(p, args)
     begin
-      r = p.call(*args)
-      failure(args) if !r
+      a = (args.length > 0 ? args + [rc = ResultCollector.new] : args)
+      r = p.call(*a)
+      if r
+        p.cover_table.add_result(rc) if rc
+      else
+        failure(p, args)
+      end
       r
     rescue Exception => e
-      failure(args, e)
+      failure(p, args, e)
       false
     end
   end
 
-  def failure(args, exception = nil)
+  def failure(p, args, exception = nil)
+    p.falsifying_case = args
     message = ''
     message += "Input #{args.inspect}" if !args.empty?
     if exception

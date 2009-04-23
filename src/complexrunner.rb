@@ -20,7 +20,7 @@ class ComplexRunner < SequentialRunner
     unless @strategies.all? { |s| s.exhausted? }
       failed = false
       @time = Time.new
-      while @strategies.any?{ |s| !s.exhausted? } and !failed and
+      while @strategies.any? { |s| !s.exhausted? } and !failed and
           (Time.new - @time < 20)
         sts = @strategies.select { |s| !s.exhausted? }
         sts.each do |s|

@@ -37,7 +37,8 @@ module PListSpec
 
     it 'should filter elements correctly' do
       pp = props
-      pl = PList.all.select { |e| e.arity > 0 }.to_plist
+      pl = PList.all.select { |e| e.arity > 0 }
+      pl.class.should == PList
       check(pl, [pp[0]])
     end
 

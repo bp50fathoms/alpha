@@ -40,4 +40,6 @@ module Action
   def do!(&block)
     Action.new(&block)
   end
+
+  module_function :do!
 end

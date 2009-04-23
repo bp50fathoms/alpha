@@ -24,4 +24,6 @@ module Random
     expanded.each { |e| hash[e] = 1 }
     frequency(hash)
   end
+
+  module_function :frequency, :one_of
 end

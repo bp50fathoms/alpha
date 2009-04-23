@@ -11,6 +11,8 @@ module Exhaustive
     UnionCombinator.new(ary)
   end
 
+  module_function :product, :union
+
 
   class Combinator
     initialize_with :ary, :finalc

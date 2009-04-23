@@ -12,3 +12,6 @@ require 'batchui'
 require 'textui'
 # require 'visualizer'
 # require 'reporter'
+
+
+include Action, Random, Exhaustive

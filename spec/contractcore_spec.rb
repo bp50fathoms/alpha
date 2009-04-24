@@ -80,6 +80,15 @@ module ContractSpec
         t.then_branch => { true => 1 } }
     end
 
+    it 'should allow making assertions on the old state' do
+      c = Contract.new(Array.instance_method(:clear), []) do
+        requires { true }
+        ensures { |r| r.old.size == 1 }
+      end
+      c.call([1], ResultCollector.new).should be_true
+      c.call([3,4], ResultCollector.new).should be_false
+    end
+
     it 'should reject a contract with mismatching type length' do
       lambda do
         Contract.new(METHOD, [], PRECONDITION, POSTCONDITION)

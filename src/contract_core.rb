@@ -1,3 +1,4 @@
+require 'decorator'
 require 'rubygems'
 require 'parse_tree'
 require 'parse_tree_extensions'
@@ -46,12 +47,24 @@ class Contract < Property
     post = Ruby2Ruby.new.process(@postcondition.to_sexp)[5..-1]
     params = pstr[2..-1]
     params2 = params + ',' if params
-    "lambda { |#{pstr}| (a.instance_exec(#{params}) #{pre})" +
-      "? (a.instance_exec(#{params2}a.#{@method.name}(#{params})) #{post}) : true}"
+    params3 = ',' + params if params
+     "lambda { |#{pstr}| (a.instance_exec(#{params}) #{pre})" +
+      "? (a.instance_exec(#{params2}CResult.new(ContractUtils.send_with_old(a," +
+      "'#{@method.name}'#{params3}))) #{post}) : true}"
   end
 
 
   def check_arity(attr, element, exp_arity)
     raise ArgumentError, "wrong #{element} arity" if ar(attr) != exp_arity
+  end
+end
+
+
+class CResult < TPDecorator
+  attr_reader :old
+
+  def initialize(r)
+    super(r.first)
+    @old = r.last
   end
 end

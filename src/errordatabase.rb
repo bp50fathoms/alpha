@@ -13,6 +13,7 @@ class ErrorDatabase
     @alpha = alpha
     @driver = Database.new(file, :type_translation => true)
     create_schema
+    prepare
     @suc = Set[]
   end
 
@@ -33,7 +34,7 @@ class ErrorDatabase
 
   def update_property(property, error = nil)
     e = dump(error)
-    @driver.execute('SELECT * FROM error WHERE property = ?', property.key) do |e|
+    @sel.execute(property.key).each do |e|
       if @suc.include?(e[1])
         update_dump(property, e[1], new_prob(0, e[2]))
       elsif e[1] != e
@@ -44,10 +45,7 @@ class ErrorDatabase
   end
 
   def get_cases(property)
-    @driver.execute('SELECT tcase FROM error WHERE property = ? ' +
-                    'ORDER BY probability DESC', property.key).map do |e|
-      Marshal.load(e.first)
-    end
+    @get.execute(property.key).map { |e| Marshal.load(e.first) }
   end
 
   private
@@ -69,9 +67,17 @@ SQL
     @driver.execute_batch(sql)
   end
 
+  def prepare
+    @ins = @driver.prepare('INSERT INTO error(property, tcase, probability) ' +
+                           'VALUES (?, ?, ?)')
+    @upd = @driver.prepare('UPDATE error SET probability = ? WHERE ' +
+                           'property = ? and tcase = ?')
+    @get = @driver.prepare('SELECT tcase FROM error WHERE property = ? ' +
+                           'ORDER BY probability DESC')
+    @sel = @driver.prepare('SELECT * FROM error WHERE property = ?')
+  end
+
   def insert(property, tcase, prob)
-    @ins ||= @driver.prepare('INSERT INTO error(property, tcase, probability) ' +
-                             'VALUES (?, ?, ?)')
     @ins.execute(property.key, Blob.new(dump(tcase)), prob)
   end
 
@@ -80,8 +86,6 @@ SQL
   end
 
   def update_dump(property, tcase, prob)
-    @upd ||= @driver.prepare('UPDATE error SET probability = ? WHERE ' +
-                             'property = ? and tcase = ?')
     @upd.execute(prob, property.key, Blob.new(tcase))
   end
 
@@ -92,8 +96,8 @@ SQL
   end
 
   def probability(property, tcase)
-    @driver.get_first_row("SELECT probability FROM error WHERE " +
-               "property = ? and tcase = ?", property.key,
+    @driver.get_first_row('SELECT probability FROM error WHERE ' +
+               'property = ? and tcase = ?', property.key,
                           Blob.new(dump(tcase))).first
   end
 end

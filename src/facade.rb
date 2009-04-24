@@ -10,7 +10,7 @@ require 'historic'
 require 'ui'
 require 'batchui'
 require 'textui'
-# require 'visualizer'
+require 'visualizer'
 # require 'reporter'
 
 

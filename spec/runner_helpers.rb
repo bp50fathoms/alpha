@@ -8,6 +8,12 @@ module RunnerHelpers
 
     it_should_behave_like 'Property'
 
+    class Foo
+      def bar(baz)
+        Math.sqrt(baz)
+      end
+    end
+
     def define_prop
       property :a do true end
 
@@ -37,8 +43,15 @@ module RunnerHelpers
         always_check ['', ''], ['a', 'a'], ['ab', 'ab']
       end
 
+      c = Contract.new(Foo.instance_method(:bar), [Fixnum]) do
+        requires { |n| n >= 0 }
+        ensures { |n,r| (r ** 2 - n).abs < 1e-5 }
+      end
+
+      c.always_check [Foo.new, 2], [Foo.new, -2]
+
       [Property[:a], Property[:b], Property[:c], Property[:d], Property[:e],
-       Property[:f], Property[:g]]
+       Property[:f], Property[:g], Property[:'RunnerHelpers::Foo.bar']]
     end
 
     it 'should run all properties with cases correctly' do
@@ -47,7 +60,7 @@ module RunnerHelpers
       r.add_observer(UI.new(s))
       (PList[*define_prop] | r).output
       s.string.should ==
-        "Checking 7 properties\n" +
+        "Checking 8 properties\n" +
         "a\n" +
         "Success\n" +
         "b\n" +
@@ -66,7 +79,9 @@ module RunnerHelpers
         "Input [nil]\n" +
         "Unhandled undefined method `length' for nil:NilClass\n" +
         "g\n" +
-        "...Success\n"
+        "...Success\n" +
+        "RunnerHelpers::Foo.bar\n" +
+        "..Success\n"
     end
   end
 end

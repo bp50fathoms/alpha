@@ -24,6 +24,8 @@ class Contract < Property
           &build_predicate(t))
   end
 
+  private
+
   def requires(&expr)
     @precondition = expr
   end
@@ -31,8 +33,6 @@ class Contract < Property
   def ensures(&expr)
     @postcondition = expr
   end
-
-  private
 
   def build_predicate(types)
     id = 'a'

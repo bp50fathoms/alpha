@@ -18,7 +18,7 @@ class HistoricStrategy < Strategy
   end
 
   def can
-    true
+    @data.length > 0
   end
 
   def exh
@@ -26,6 +26,6 @@ class HistoricStrategy < Strategy
   end
 
   def pro
-    @count / @factor * @data.length
+    @count / (@factor * @data.length)
   end
 end

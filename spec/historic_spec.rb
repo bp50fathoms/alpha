@@ -79,10 +79,10 @@ module HistoricStrategySpec
 
         it '' do
           @strategy.generate.should == ['b']
-          # @strategy.progress.should == 0.5
+          @strategy.progress.should == 0.5
           @strategy.exhausted?.should be_false
           @strategy.generate.should == ['a']
-          # @strategy.progress.should == 1.0
+          @strategy.progress.should == 1.0
           @strategy.exhausted?.should be_true
         end
       end

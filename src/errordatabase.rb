@@ -27,17 +27,17 @@ class ErrorDatabase
       insert(property, tcase, 1)
     else
       p = probability(property, tcase)
-      update(property, tcase, alpha + (1 - alpha) * p)
+      update(property, tcase, new_prob(1, p))
     end
     update_property(property, tcase)
   end
 
   def update_property(property, error = nil)
-    e = dump(error)
+    dumped_e = dump(error)
     @sel.execute(property.key).each do |e|
       if @suc.include?(e[1])
         update_dump(property, e[1], new_prob(0, e[2]))
-      elsif e[1] != e
+      elsif e[1] != dumped_e
         update_dump(property, e[1], new_prob(1, e[2]))
       end
     end
@@ -82,7 +82,7 @@ SQL
   end
 
   def update(property, tcase, prob)
-    update_dump(property, tcase, dump(prob))
+    update_dump(property, dump(tcase), prob)
   end
 
   def update_dump(property, tcase, prob)

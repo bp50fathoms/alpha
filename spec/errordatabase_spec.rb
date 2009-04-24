@@ -99,7 +99,8 @@ module ErrorDatabaseSpec
       @db.insert_success(p1, ['a'])
       @db.insert_success(p1, ['b'])
       @db.update_property(p1)
-      select_ord.to_set.should == [['p1', ['b'], 0.4], ['p1', ['a'], 0.304]].to_set
+      @db.insert_error(p1, ['b'])
+      select_ord.to_set.should == [['p1', ['b'], 0.76], ['p1', ['a'], 0.7216]].to_set
     end
 
     it 'should return the failing cases ordered correctly and unmarshalled' do

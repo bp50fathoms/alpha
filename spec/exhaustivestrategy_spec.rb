@@ -76,6 +76,20 @@ module ExhaustiveStrategySpec
 
 
       describe ExhaustiveStrategy, 'with a contract that does not have any cases' do
+        class Baz
+          def foo(a, b)
+            nil
+          end
+        end
+
+        def define_prop
+          Contract.new(Baz.instance_method(:foo), [String, String]) do
+            requires { |a,b| true }
+            ensures { |r,a,b| true }
+          end
+        end
+
+        it_should_behave_like 'PropertyWithoutCases'
       end
 
 
@@ -104,9 +118,7 @@ module ExhaustiveStrategySpec
           @strategy.exhausted?.should be_false
           @strategy.progress.should == 0.5
           check(@strategy.generate, "\0")
-          127.times do
-             s = @strategy.generate
-          end
+          127.times { s = @strategy.generate }
           @strategy.progress.should == 1.0
           @strategy.exhausted?.should be_false
           check(@strategy.generate, "\0\0")

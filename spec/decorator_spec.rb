@@ -25,4 +25,13 @@ module DecoratorSpec
       [:&, :|, :decorated].all? { |m| foo.respond_to?(m) }.should be_true
     end
   end
+
+
+  describe TPDecorator do
+    it 'should decorate transparently any object' do
+      t = TPDecorator.new(1)
+      (t == 1).should be_true
+      (t + 2).should == 3
+    end
+  end
 end

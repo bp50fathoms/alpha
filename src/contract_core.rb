@@ -53,7 +53,6 @@ class Contract < Property
       "'#{@method.name}'#{params3}))) #{post}) : true}"
   end
 
-
   def check_arity(attr, element, exp_arity)
     raise ArgumentError, "wrong #{element} arity" if ar(attr) != exp_arity
   end

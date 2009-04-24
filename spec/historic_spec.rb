@@ -13,9 +13,10 @@ module HistoricStrategySpec
     end
 
 
-    describe HistoricStrategy, 'with runner and database' do
-      before(:each) do
-        Property.clear
+    describe HistoricStrategy do
+      it_should_behave_like 'Strategy'
+
+      def set_up
         delete_file
         @db = ErrorDatabase.new(DB_FILE)
         @p1 = property :p1 => [String] do |a| a.length == 0 end
@@ -34,15 +35,12 @@ module HistoricStrategySpec
         @db.update_property(@p1)
         @db.insert_error(@p1, ['b'])
         @db.insert_error(@p2, ['a', 'b'])
-        @strategy = strategy.new
         @strategy.set_runner(stub('Runner', :db => @db))
-        @strategy.set_property(define_prop)
       end
 
-      after(:each) do
-        @strategy = @db = nil
+      def tear_down
+        @db = nil
         delete_file
-        Property.clear
       end
 
       def delete_file

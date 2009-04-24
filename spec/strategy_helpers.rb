@@ -29,13 +29,19 @@ module StrategyHelpers
     before(:each) do
       Property.clear
       @strategy = strategy.new
+      set_up
       @strategy.set_property(define_prop)
     end
 
     after(:each) do
       Property.clear
+      tear_down
       @strategy = nil
     end
+
+    def set_up; end
+
+    def tear_down; end
   end
 
 

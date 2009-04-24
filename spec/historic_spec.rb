@@ -64,10 +64,11 @@ module HistoricStrategySpec
 
         def define_prop; @p2 end
 
-        it '' do
+        it 'it should generate the unique case and then be exhausted' do
           @strategy.generate.should == ['a', 'b']
           @strategy.progress.should == 1.0
           @strategy.exhausted?.should be_true
+          lambda { @strategy.generate }.should raise_error
         end
       end
 
@@ -77,13 +78,14 @@ module HistoricStrategySpec
 
         def define_prop; @p1 end
 
-        it '' do
+        it 'it should generate the cases and then be exhausted' do
           @strategy.generate.should == ['b']
           @strategy.progress.should == 0.5
           @strategy.exhausted?.should be_false
           @strategy.generate.should == ['a']
           @strategy.progress.should == 1.0
           @strategy.exhausted?.should be_true
+          lambda { @strategy.generate }.should raise_error
         end
       end
     end

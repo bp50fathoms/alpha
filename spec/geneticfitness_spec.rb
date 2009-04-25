@@ -30,6 +30,10 @@ module GeneticFitnessSpec
 
     it 'should compute correctly the fitness for ==' do
       fitness(:==, true, 0, 0).should == 0
+      fitness(:==, true, 1, 1).should == 0
+      fitness(:==, true, 1, 8).should == 49
+      fitness(:==, false, 1, 1).should == 0.1
+      fitness(:==, false, 1, 5).should == 0
     end
 
     it 'should compute correctly the fitness for an atom' do
@@ -41,10 +45,13 @@ module GeneticFitnessSpec
 
     it 'should compute correctly the fitness for >' do
       fitness(:>, true, 3, 2).should == 0
+      fitness(:>, true, 3, 3).should == 1
     end
 
     it 'should compute correctly the fitness for >=' do
       fitness(:>=, true, 2, 2).should == 0
+      fitness(:>=, true, 8, -1).should == 0
+      fitness(:>=, false, 8, -1).should == 10
     end
   end
 end

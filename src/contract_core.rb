@@ -17,10 +17,11 @@ class Contract < Property
     @method = method
     @precondition = precondition
     @postcondition = postcondition
+    t = [method.owner] + types
+    @types = t
     instance_eval(&block) if block != nil
     check_arity(@precondition, 'precondition', method.arity)
     check_arity(@postcondition, 'postcondition', method.arity + 1)
-    t = [method.owner] + types
     super("#{method.owner.name}.#{method.name}".to_sym, t,
           &build_predicate(t))
   end

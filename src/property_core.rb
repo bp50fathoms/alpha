@@ -29,6 +29,7 @@ class Property
     if expr.nil?
       @predicate
     else
+      raise 'Property predicate is immutable' if @predicate
       self.predicate = expr
     end
   end

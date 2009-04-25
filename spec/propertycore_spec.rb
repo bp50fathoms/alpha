@@ -138,5 +138,11 @@ module PropertyCoreSpec
         end
       end.should raise_error(ArgumentError)
     end
+
+    it 'should reject to change the predicate' do
+      p = property :p do true end
+      lambda { p.predicate { false } }.should raise_error('Property predicate is ' +
+                                                          'immutable')
+    end
   end
 end

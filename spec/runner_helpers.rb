@@ -46,9 +46,9 @@ module RunnerHelpers
       c = Contract.new(Foo.instance_method(:bar), [Fixnum]) do
         requires { |n| n >= 0 }
         ensures { |n,r| (r ** 2 - n).abs < 1e-5 }
-      end
 
-      c.always_check [Foo.new, 2], [Foo.new, -2]
+        always_check [Foo.new, 2], [Foo.new, -2]
+      end
 
       [Property[:a], Property[:b], Property[:c], Property[:d], Property[:e],
        Property[:f], Property[:g], Property[:'RunnerHelpers::Foo.bar']]

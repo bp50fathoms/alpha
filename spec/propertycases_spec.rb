@@ -11,7 +11,7 @@ module PropertyCasesSpec
       p = property :p => String do
         predicate { |s| s.size == s.length }
 
-        always_check '', "\\\?"
+        always_check [''], ["\\\?"]
       end
       p.cases.should == [[''], ["\\\?"]]
     end
@@ -20,7 +20,7 @@ module PropertyCasesSpec
       p = property :p => String do
         predicate { |s| s.size == s.length }
 
-        always_check ''
+        always_check ['']
       end
       p.cases.should == [['']]
     end

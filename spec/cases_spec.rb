@@ -33,7 +33,7 @@ module CasesSpec
           property :p => String do
             predicate { |s| s.length >= 0 }
 
-            always_check ''
+            always_check ['']
           end
         end
 

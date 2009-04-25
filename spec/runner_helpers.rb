@@ -34,7 +34,7 @@ module RunnerHelpers
       property :f => String do
         predicate { |s| s.length >= 0 }
 
-        always_check '', nil, 'a'
+        always_check [''], [nil], ['a']
       end
 
       property :g => [String, String] do

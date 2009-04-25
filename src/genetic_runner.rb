@@ -1,6 +1,6 @@
 require 'genetic_search'
 require 'initializer'
-require 'patternmatch'
+require 'permutations'
 require 'runner'
 
 
@@ -18,7 +18,14 @@ class GeneticRunner < SequentialRunner
     # en caso contrario fallar
 
     if p.types.all? { |t| t == Fixnum }
-      leafs(p.tree)
+      l = leafs(p.tree)
+      code = Permutations.genc(l.size, lambda { |v,i| "for #{v} in [true,false]"},
+                               ',', lambda{ |y| "a << [#{y}]" })
+      a = []
+      eval code, binding
+      a.each do |c|
+
+      end
     else
       notify_failure('No test cases could be generated')
     end

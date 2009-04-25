@@ -38,5 +38,9 @@ end
 
 class BoolAtom
   include Visitable
-  attrd(:code)
+  attrd(:code, Default[:comp, nil])
+end
+
+class CompAtom
+  include Visitable
 end

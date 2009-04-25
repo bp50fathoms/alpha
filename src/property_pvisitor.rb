@@ -75,6 +75,18 @@ class PredicateVisitor
       exp[3] << s(:lvar, :_r)
       s = instrument(exp, t)
       [s, t]
+    elsif [:<, :>, :<=, :>=, :==].include?(exp[2])
+      exp
+      l = exp[1]
+      op = exp[2]
+      r = exp[3][1]
+      comp = BinaryExpr.new(CompAtom.new, op, CompAtom.new)
+      ce = s(:call, instrument(l, comp.left_expr),
+             op,
+             s(:arglist, instrument(r, comp.right_expr)))
+      t = BoolAtom.new(sexp_to_s(exp), comp)
+      s = instrument(ce, t)
+      [s, t]
     else
       t = BoolAtom.new(sexp_to_s(exp))
       s = instrument(exp, t)

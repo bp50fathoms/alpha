@@ -130,11 +130,11 @@ module PredicateVisitorSpec
     end
 
     it 'should process correctly instance_exec' do
-      b, t = accept { |a| a.instance_exec(1,2) { |c,d| @a > (c + d) } }
+      b, t = accept { |a| a.instance_exec(1,2) { |c,d| f(c + d) } }
       source(b).should ==
         "proc do |a, _r|\n" +
         "  a.instance_exec(1, 2) do |c, d|\n" +
-        "    _r.store(#{id(t)}, (@a > (c + d)))\n" +
+        "    _r.store(#{id(t)}, f((c + d)))\n" +
         "  end\n" +
         'end'
     end
@@ -145,6 +145,17 @@ module PredicateVisitorSpec
         "proc do |a, b, _r|\n" +
         "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, q((a and b))) or " +
         "_r.store(#{id(t.right_expr)}, r { a })))\n" +
+        'end'
+    end
+
+    it 'should process correctly arithmetic comparisons' do
+      b, t = accept { |a,b,c,d| (a + b) <= c and d }
+      source(b).should ==
+        "proc do |a, b, c, d, _r|\n" +
+        "  _r.store(#{id(t)}, (_r.store(#{id(t.left_expr)}, " +
+        "(_r.store(#{id(t.left_expr.comp.left_expr)}, (a + b)) " +
+        "<= _r.store(#{id(t.left_expr.comp.right_expr)}, c)))" +
+        " and _r.store(#{id(t.right_expr)}, d)))\n" +
         'end'
     end
 
@@ -181,8 +192,6 @@ end
 #     "== _r.store(#{id(t.right_expr)}, b)))\n" +
 #     'end'
 # end
-
-# big example 1
 
 
 # it 'should process correctly lazy implication' # do

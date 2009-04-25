@@ -74,9 +74,12 @@ module PropertyCoreSpec
       r = ResultCollector.new
       p.call('a', r)
       t = p.tree
-      r.result.should == { t => [true], t.condition => [true],
-        t.condition.comp.left_expr => [1], t.condition.comp.right_expr => [0],
-        t.then_branch => [true], t.then_branch.comp.left_expr => [1],
+      r.result.should == { t => [true],
+        t.condition => [true],
+        t.condition.comp.left_expr => [1],
+        t.condition.comp.right_expr => [0],
+        t.then_branch => [true],
+        t.then_branch.comp.left_expr => [1],
         t.then_branch.comp.right_expr => [0] }
     end
 

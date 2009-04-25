@@ -1,4 +1,6 @@
-# Some code adapted from gga4r gem (library), fixing existing bugs
+# Source: gga4r Ruby gem (library)
+# Some existing bugs fixed
+
 class GeneticSearch
   attr_accessor :population
 

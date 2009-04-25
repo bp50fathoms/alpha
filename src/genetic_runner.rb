@@ -1,5 +1,6 @@
 require 'genetic_search'
 require 'initializer'
+require 'patternmatch'
 require 'runner'
 
 
@@ -17,13 +18,9 @@ class GeneticRunner < SequentialRunner
     # en caso contrario fallar
 
     if p.types.all? { |t| t == Fixnum }
-      leafs(p)
+      leafs(p.tree)
     else
       notify_failure('No test cases could be generated')
     end
-  end
-
-  def leafs(p)
-
   end
 end

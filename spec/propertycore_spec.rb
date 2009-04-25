@@ -62,6 +62,24 @@ module PropertyCoreSpec
         t.else_branch => { true => 1 } }
     end
 
+    it 'should have instrumentation facilities working correctly for arithmetic
+    expressions' do
+      p = property :p => [String] do |a|
+        if a.length > 0
+          a.length > 0
+        else
+          a.length == 0
+        end
+      end
+      r = ResultCollector.new
+      p.call('a', r)
+      t = p.tree
+      r.result.should == { t => [true], t.condition => [true],
+        t.condition.comp.left_expr => [1], t.condition.comp.right_expr => [0],
+        t.then_branch => [true], t.then_branch.comp.left_expr => [1],
+        t.then_branch.comp.right_expr => [0] }
+    end
+
     it 'should reject extreme varargs blocks that are incorrect in Proc' do
       lambda do
         p = property :p do |*a|

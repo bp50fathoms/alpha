@@ -19,6 +19,7 @@ class GeneticRunner < SequentialRunner
                                ',', lambda{ |y| "a << [#{y}]" })
       a = []
       eval code, binding
+      success = true
       a.each do |c|
         notify_step
         factory = ChromosomeFactory.new(p, c)
@@ -26,11 +27,15 @@ class GeneticRunner < SequentialRunner
           GeneticSearch.new(factory, @population, @generations).run
         rescue FalsifiedProperty => f
           failure(p, f.case)
+          success = false
+          break
         rescue Exception => e
           failure()
+          success = false
+          break
         end
       end
-      notify_success
+      notify_success if success
     else
       notify_failure('No test cases could be generated')
     end

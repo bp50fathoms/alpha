@@ -20,6 +20,10 @@ module GeneticRunnerSpec
       property :e => Fixnum do |a|
         a >= 0
       end
+
+      property :f => [Fixnum, Fixnum] do |a,b|
+        (a > b) | (a <= b)
+      end
     end
 
     it 'should run all unary properties and those with greater arity correctly' do
@@ -30,7 +34,7 @@ module GeneticRunnerSpec
       (PList.all | r).output
       p s.string
       s.string.should ==
-        "Checking 4 properties\n" +
+        "Checking 6 properties\n" +
         "a\n" +
         "Success\n" +
         "b\n" +
@@ -40,7 +44,12 @@ module GeneticRunnerSpec
         "Unhandled exception object expected\n" +
         "d\n" +
         "Failure\n" +
-        "No test cases could be generated\n"
+        "No test cases could be generated\n" +
+        "e\n" +
+        "..Failure\n" +
+        "Input [-1]\n" +
+        "f\n" +
+        "....Success\n"
     end
   end
 end

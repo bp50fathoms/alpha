@@ -1,15 +1,18 @@
 require 'genetic_fitness'
+require 'genetic_tleafs'
 require 'initializer'
 require 'property'
 
 
 class ChromosomeFactory
+  include GeneticTreeLeafs
+
   attr_reader :property, :goal
 
-  def initialize(property, leafs, permutation)
+  def initialize(property, permutation)
     @property = property
     h = []
-    leafs.each_with_index { |e,i| h << e; h << permutation[i] }
+    leafs(property.tree).each_with_index { |e,i| h << e; h << permutation[i] }
     @goal = Hash[*h]
   end
 
@@ -18,6 +21,7 @@ class ChromosomeFactory
     i = rand(property.arity)
     s = rand(2) == 1 ? -1 : 1
     chromosome.data[i] += s * rand(2)
+    chromosome
   end
 
   def reproduce(a, b)

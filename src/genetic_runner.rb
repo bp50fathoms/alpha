@@ -15,6 +15,7 @@ class GeneticRunner < SequentialRunner
       # iterar por todas las combinaciones de true false
         # crear search con chromosome adecuado a combinacion y hojas, lanzar
         # desde alli utilizar excepcion para retornar en caso de que falle
+        # capturar tambien excepciones normales lanzadas por propiedades
     # en caso contrario fallar
 
     if p.types.all? { |t| t == Fixnum }

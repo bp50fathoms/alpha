@@ -25,4 +25,6 @@ module GeneticFitness
   def fitness(op, goal, *args)
     FUNC[op][goal].call(*args)
   end
+
+  module_function :fitness
 end

@@ -50,9 +50,9 @@ class Chromosome
     res = eval_property.result
     goal = @factory.goal
     goal.map do |e|
-      # cuidado con caso de que no evaluen algunas hojas, devolver constante grande
-      if e.first.is_a?(BoolAtom) and e.first.comp
-        # p e.first
+      if !res.has_key?(e.first)
+        GeneticFitness::MAXFIT
+      elsif e.first.is_a?(BoolAtom) and e.first.comp
         op = e.first.comp.operator
         gl = e.last
         args = [res[e.first.comp.left_expr], res[e.first.comp.right_expr]].flatten

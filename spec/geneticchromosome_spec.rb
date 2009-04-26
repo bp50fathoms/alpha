@@ -49,5 +49,52 @@ module GeneticChromosomeSpec
 
   describe Chromosome do
     it_should_behave_like 'Property'
+
+    it 'should compute correctly the fitness for a simple property' do
+      p = property :p => [Fixnum, Fixnum] do |a,b|
+        a >= b or b >= a
+      end
+      chromosome(p, [true, true], [5, 10]).fitness.should == -5
+      chromosome(p, [true, false], [5, 10]).fitness.should == -11
+      chromosome(p, [false, true], [5, 10]).fitness.should == 0
+      chromosome(p, [false, false], [5, 10]).fitness.should == -6
+    end
+
+    it 'should raise an exception when the property is falsified' do
+      p = property :p => [Fixnum] do |a|
+        a >= 3
+      end
+      lambda do
+        chromosome(p, [true], [2]).fitness
+      end.should raise_error(FalsifiedProperty)
+      lambda do
+        chromosome(p, [false], [2]).fitness
+      end.should raise_error(FalsifiedProperty)
+    end
+
+    it 'should not crash when a subexpression is not evaluated' do
+      p = property :p => [Fixnum, Fixnum] do |a,b|
+        a >= b or b >= a
+      end
+      q = property :q => [Fixnum, Fixnum] do |a,b|
+        (a >= b) | (b >= a)
+      end
+      chromosome(p, [true, true], [10, 5]).fitness.should == -GeneticFitness::MAXFIT
+      chromosome(q, [true, true], [10, 5]).fitness.should == -5
+    end
+
+    it 'should handle correctly conditionals and atoms' do
+      p = property :p => [Fixnum] do |a|
+        a >= 0 ? a.odd? : a.even?
+      end
+      chromosome(p, [true, true, true], [1]).fitness.should ==
+        -GeneticFitness::MAXFIT
+    end
+
+    def chromosome(property, goal, data)
+      p = PropertyDecorator.new(property)
+      c = ChromosomeFactory.new(p, goal)
+      Chromosome.new(c, data)
+    end
   end
 end

@@ -20,7 +20,7 @@ class ChromosomeFactory
     # quizas cambiar mas elementos
     i = rand(property.arity)
     s = rand(2) == 1 ? -1 : 1
-    chromosome.data[i] += s * rand(2)
+    chromosome.data[i] += s * rand(10)
     chromosome
   end
 

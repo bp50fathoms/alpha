@@ -17,24 +17,16 @@ module GeneticRunnerSpec
         a == 'a'
       end
 
-      property :e => Fixnum do |a|
-        a >= 0
-      end
-
-      property :f => [Fixnum, Fixnum] do |a,b|
+      property :e => [Fixnum, Fixnum] do |a,b|
         (a > b) | (a <= b)
       end
     end
 
     it 'should run all unary properties and those with greater arity correctly' do
       define_prop
-      r = GeneticRunner.new
-      s = StringIO.new
-      r.add_observer(UI.new(s))
-      (PList.all | r).output
-      p s.string
+      runner(PList.all, s = StringIO.new)
       s.string.should ==
-        "Checking 6 properties\n" +
+        "Checking 5 properties\n" +
         "a\n" +
         "Success\n" +
         "b\n" +
@@ -46,10 +38,56 @@ module GeneticRunnerSpec
         "Failure\n" +
         "No test cases could be generated\n" +
         "e\n" +
-        "..Failure\n" +
-        "Input [-1]\n" +
-        "f\n" +
         "....Success\n"
+    end
+
+    it 'should falsify a very simple unsound property' do
+      property :p => [Fixnum] do |a|
+        a >= 100
+      end
+      falsify
+    end
+
+    it 'should falsify another very simple unsound property' do
+      property :p => [Fixnum] do |a|
+        a <= 388
+      end
+      falsify
+    end
+
+    it 'should cover a simple sound property' do
+      property :p => [Fixnum, Fixnum] do |a,b|
+        (a >= b) | (a < b)
+      end
+      not_falsify_and_cover
+    end
+
+    it 'should falsify a simple unsound property' do
+      property :p => [Fixnum, Fixnum] do |a,b|
+        (a > b) | (a < b)
+      end
+      o = falsify
+      c = o.falsifying_case
+      c.first.should == c.last
+    end
+
+    def runner(list, string)
+      r = GeneticRunner.new
+      r.add_observer(UI.new(string))
+      (list | r).output
+    end
+
+    def falsify
+      o = runner(PList.all, StringIO.new)[0]
+      o.falsified?.should be_true
+      o
+    end
+
+    def not_falsify_and_cover
+      o = runner(PList.all, StringIO.new)[0]
+      o.falsified?.should be_false
+      o.cover_table.covered?.should be_true
+      o
     end
   end
 end

@@ -4,8 +4,6 @@ require 'property_helpers'
 
 module RunnerHelpers
   shared_examples_for 'Runner' do
-    include PropertyHelpers
-
     it_should_behave_like 'Property'
 
     class Foo

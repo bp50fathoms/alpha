@@ -67,17 +67,22 @@ class Chromosome
 
   def eval_property
     rc = ResultCollector.new
-    r = @factory.property.call(*(data + [rc]))
+    r = nil
+    begin
+      r = @factory.property.call(*(data + [rc]))
+    rescue => e
+      raise FalsifiedProperty.new(data, e)
+    end
     if r
       @factory.property.cover_table.add_result(rc)
       rc
     else
-      raise FalsifiedProperty.new(data)
+      raise FalsifiedProperty.new(data, nil)
     end
   end
 end
 
 
 class FalsifiedProperty < Exception
-  attr_reader *(initialize_with(:case))
+  attr_reader(*initialize_with(:tcase, :exc))
 end

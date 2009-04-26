@@ -71,6 +71,22 @@ module GeneticRunnerSpec
       c.first.should == c.last
     end
 
+    it 'should falsify a simple lazy unsound property' do
+      property :p => [Fixnum, Fixnum] do |a,b|
+        a > b or a < b
+      end
+      o = falsify
+      c = o.falsifying_case
+      c.first.should == c.last
+    end
+
+    it 'should deal gracefully with properties that throw exceptions' do
+      property :p => [Fixnum, Fixnum, Fixnum] do |a,b,c|
+        raise ''
+      end
+      falsify
+    end
+
     def runner(list, string)
       r = GeneticRunner.new
       r.add_observer(UI.new(string))

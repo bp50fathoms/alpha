@@ -26,11 +26,7 @@ class GeneticRunner < SequentialRunner
         begin
           GeneticSearch.new(factory, @population, @generations).run
         rescue FalsifiedProperty => f
-          failure(p, f.case)
-          success = false
-          break
-        rescue Exception => e
-          failure()
+          failure(p, f.tcase, f.exc)
           success = false
           break
         end

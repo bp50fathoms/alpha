@@ -5,7 +5,6 @@ require 'property_helpers'
 
 module GeneticChromosomeSpec
   describe ChromosomeFactory do
-
     before(:each) do
       Property.clear
       pr = property :p => [Fixnum, Fixnum] do |a,b|

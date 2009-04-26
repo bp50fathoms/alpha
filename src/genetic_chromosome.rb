@@ -47,22 +47,20 @@ class Chromosome
   end
 
   def fitness
-    r, rc = eval_property
-    raise FalsifiedProperty.new(data) unless r
-    g = @factory.goal
-    g.map do |e|
+    res = eval_property.result
+    goal = @factory.goal
+    goal.map do |e|
+      # cuidado con caso de que no evaluen algunas hojas, devolver constante grande
       if e.first.is_a?(BoolAtom) and e.first.comp
-        p e.first
-        p op = e.first.comp.operator
-        p gl = e.last
-        p args = [rc.result[e.first.comp.left_expr],
-                  rc.result[e.first.comp.right_expr]].flatten
+        # p e.first
+        op = e.first.comp.operator
+        gl = e.last
+        args = [res[e.first.comp.left_expr], res[e.first.comp.right_expr]].flatten
         GeneticFitness.fitness(op, gl, *args)
       else
-        GeneticFitness.fitness(:atom, e.last, rc.result[e.first])
+        GeneticFitness.fitness(:atom, e.last, res[e.first])
       end
     end.inject(:+) * -1
-    # cuidado con caso de que no evaluen algunas hojas
   end
 
   private
@@ -70,12 +68,16 @@ class Chromosome
   def eval_property
     rc = ResultCollector.new
     r = @factory.property.call(*(data + [rc]))
-    @factory.property.cover_table.add_result(rc) if r
-    [r, rc]
+    if r
+      @factory.property.cover_table.add_result(rc)
+      rc
+    else
+      raise FalsifiedProperty.new(data)
+    end
   end
 end
 
 
-class FalsifiedProperty
+class FalsifiedProperty < Exception
   attr_reader *(initialize_with(:case))
 end

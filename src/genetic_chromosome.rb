@@ -17,7 +17,6 @@ class ChromosomeFactory
   end
 
   def mutate(chromosome)
-    # quizas cambiar mas elementos
     i = rand(property.arity)
     s = rand(2) == 1 ? -1 : 1
     chromosome.data[i] += s * rand(10)

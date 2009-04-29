@@ -12,7 +12,7 @@ class Visualizer
   def process(i)
     i.select { |p| !p.falsified? and p.arity > 0 }.each do |p|
       file = "#{@path}/#{p.key}.pdf"
-      g = GraphViz.new(p.key.to_s, :output => 'pdf', :file => file)
+      g = GraphViz.new('g', :output => 'pdf', :file => file)
       DOTVisitor.new(g, p)
       g.output
       `open #{file}` if @open

@@ -6,7 +6,18 @@ require 'ruby2ruby'
 require 'unifiedarity'
 
 
-class Contract < Property
+class Contract
+  def self.new(method, *args, &block)
+    if method.is_a?(Method)
+      FunctionPContract.new(method, *args, &block)
+    else
+      ObjectPContract.new(method, *args, &block)
+    end
+  end
+end
+
+
+class PContract < Property
   include UnifiedArity
 
   attr_reader :method, :precondition, :postcondition
@@ -17,7 +28,7 @@ class Contract < Property
     @method = method
     @precondition = precondition
     @postcondition = postcondition
-    t = [method.owner] + types
+    t = tl(method, types)
     @types = t
     instance_eval(&block) if block != nil
     check_arity(@precondition, 'precondition', method.arity)
@@ -49,13 +60,51 @@ class Contract < Property
     params = pstr[2..-1]
     params2 = params + ',' if params
     params3 = ',' + params if params
-     "lambda { |#{pstr}| (a.instance_exec(#{params}) #{pre})" +
-      "? (a.instance_exec(#{params2}CResult.new(ContractUtils.send_with_old(a," +
-      "'#{@method.name}'#{params3}))) #{post}) : true}"
+    pred_str(pstr, params, pre, post, params2, params3)
+     # "lambda { |#{pstr}| (a.instance_exec(#{params}) #{pre})" +
+     #  "? (a.instance_exec(#{params2}CResult.new(ContractUtils.send_with_old(a," +
+     #  "'#{@method.name}'#{params3}))) #{post}) : true}"
   end
 
   def check_arity(attr, element, exp_arity)
     raise ArgumentError, "wrong #{element} arity" if ar(attr) != exp_arity
+  end
+end
+
+
+class ObjectPContract < PContract
+  def initialize(*args, &block)
+    super(*args, &block)
+  end
+
+  private
+
+  def tl(method, types)
+    [method.owner] + types
+  end
+
+  def pred_str(pstr, params, pre, post, params2, params3)
+    "lambda { |#{pstr}| (a.instance_exec(#{params}) #{pre})" +
+      "? (a.instance_exec(#{params2}CResult.new(ContractUtils.send_with_old(a," +
+      "'#{@method.name}'#{params3}))) #{post}) : true}"
+  end
+end
+
+
+class FunctionPContract < PContract
+  def initialize(*args, &block)
+    super(*args, &block)
+  end
+
+  private
+
+  def tl(method, types)
+    types
+  end
+
+  def pred_str(pstr, params, pre, post, params2, params3)
+    "lambda { |#{pstr}| (self.instance_exec(#{pstr}) #{pre}) ? " +
+      "(self.instance_exec(#{pstr}, #{@method.owner.to_s.match(/\:.*>/).to_s[1..-2]}"+      ".send('#{@method.name}', #{pstr})) #{post}) : true }"
   end
 end
 

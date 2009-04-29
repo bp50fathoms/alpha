@@ -80,6 +80,19 @@ module ContractSpec
         t.then_branch => { true => 1 } }
     end
 
+    it 'should allow contracts for functions' do
+      c = Contract.new(Math.method(:sqrt), [Float], PRECONDITION, POSTCONDITION)
+      r1 = ResultCollector.new
+      c.call(4, r1).should be_true
+      c.call(-4, r1).should be_true
+      ct = CoverTable.new(c)
+      ct.add_result(r1)
+      t = c.tree
+      ct.table.should == { t => { true => 2 },
+        t.condition => { true => 1, false => 1 },
+        t.then_branch => { true => 1 } }
+    end
+
     it 'should allow making assertions on the old state' do
       c = Contract.new(Array.instance_method(:clear), []) do
         requires { true }

@@ -13,7 +13,7 @@ OUT_DIR = 'out'
 SPEC_DOC = "#{DOC_DIR}/#{SPEC_DIR}/spec.html"
 RCOV_DOC = "#{DOC_DIR}/#{RCOV_DIR}"
 
-EXCLUDES = ['dsl', 'patternmatch', 'textui', 'ui', 'scrollpane']
+EXCLUDES = ['dsl', 'patternmatch', 'textui', 'ui', 'random_fixnum', 'scrollpane']
 EXCLUDES_SRC = EXCLUDES.map { |f| "#{SRC_DIR}/#{f}.rb," }.inject(&:+)[0..-2]
 EXCLUDE_RCOV = "#{SPEC_DIR},#{Gem.dir},#{EXCLUDES_SRC}"
 
